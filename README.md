@@ -19,7 +19,7 @@ For example, the command
 ```
 $ texliveonfly --compiler lualatex hello-world.tex
 ```
-while trying to produce ```hello-world.tex``` with ```lualatex``` detects missing packages and install them *on the fly*. After you have all what you need, a ordinary
+while trying to produce ```hello-world.pdf``` with ```lualatex``` detects missing packages and install them *on the fly*. After you have all what you need, a ordinary
 ```
 $ lualatex hello-world.tex
 ```
