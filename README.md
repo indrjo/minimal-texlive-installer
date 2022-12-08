@@ -2,11 +2,11 @@
 
 * [Preamble](#preamble)
 
-* [Minimal TeX Live on GNU/Linux](#minimal-texlive-on-gnulinux)
+* [Minimal TeX Live on GNU/Linux](#minimal-tex-live-on-gnulinux)
 
-* [Minimal TeX Live on Android](#minimal-texlive-on-android)
+* [Minimal TeX Live on Android](#minimal-tex-live-on-android)
 
-* [TeX Live on the fly](#texlive-on-the-fly)
+* [TeX Live on the fly](#tex-live-on-the-fly)
 
 * [Flytex](#flytex)
 
@@ -23,7 +23,7 @@ while trying to produce ```hello-world.tex``` with ```lualatex``` detects missin
 ```
 $ lualatex hello-world.tex
 ```
-will work. There is a [dedicated section below](#texlive-on-the-fly) for this script: you may want to read that before.
+will work. There is a [dedicated section below](#tex-live-on-the-fly) for this script: you may want to read that before.
 
 
 
