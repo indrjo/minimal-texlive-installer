@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# This script handles the installation of a minimal TeXlive, followed by
+# some patches, additional tlmgr packages and other fixes...
+
+# This script is a modification of termux-install-tl which comes bundled
+# with the Termux package called texlive-installer.
+
+set -e
+
+# Install two Termux packages, first of all.
+pkg install texlive-bin texlive-installer
+
+# Fix PATH
+source $PREFIX/etc/profile.d/texlive.sh
+
+# Select the "minimal" scheme instead of the "full" one. This amounts at 
+# using a modified version of $PREFIX/opt/texlive/termux.profile bundled in
+# the package texlive-installer.
+sed 's/scheme-full/scheme-minimal/' \
+  $PREFIX/opt/texlive/termux.profile > \
+  $PREFIX/opt/texlive/termux-install-minimal.profile
+
+echo ":: starting the installer..."
+$PREFIX/opt/texlive/install-tl/install-tl \
+  --custom-bin $PREFIX/bin/texlive \
+  --profile $PREFIX/opt/texlive/termux-install-minimal.profile
+  # --profile $PREFIX/opt/texlive/termux.profile
+
+echo ":: patching the TeXlive just installed..."
+$PREFIX/bin/termux-patch-texlive
+
+echo ":: installing some TeXlive packages before..."
+tlmgr install texlive-scripts-extra
+tlmgr install latex-bin
+tlmgr install texliveonfly
+
+echo ":: generating missing formats..."
+fmtutil-sys --byfmt pdflatex
+fmtutil-sys --byfmt lualatex
+
+echo ":: conclusive fixes..."
+updmap-sys
+texlinks
+
+echo ":: All done. Restart the shell or source $PREFIX/etc/profile.d/texlive.sh to add the texlive programs to \$PATH."
+

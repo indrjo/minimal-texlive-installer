@@ -1,0 +1,124 @@
+#!/usr/bin/env sh
+
+set -e -o pipefail
+
+# Where all the installed TeXlive goes. It defaults to a directory in your
+# home called "texlive".
+prefix=~/texlive
+# Verify the installer before running it? By default, do not do it. It is
+# recommended to do so, though.
+verify_installer=no
+
+# Parsing the commandline arguments.
+while [ $# -gt 0 ]; do
+  case $1 in
+    --prefix=*)
+      prefix=${1#*=}
+      shift
+    ;;
+    --verify-installer)
+      verify_installer=yes
+      shift
+    ;;
+    *)
+      echo ":: unknown option: $1"
+      exit 1
+    ;;
+  esac
+done
+
+
+## PREPARING FOR THE INSTALLER
+
+# Let us choose a directory where to download the installer and move there.
+install_dir=~/tl-installer
+[ -d $install_dir ] || mkdir $install_dir
+cd $install_dir
+
+echo -n ":: download install-tl-unx.tar.gz... "
+wget -q https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+if [ $? -eq 0 ]
+  then echo "OK"
+  else
+    echo "ERROR!"
+    exit
+fi
+
+if [ $verify_installer == "yes" ]; then
+  echo ":: verifying the installer... "
+  wget -q http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz.sha512
+  wget -q http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz.sha512.asc
+  wget -q https://tug.org/texlive/files/texlive.asc
+  
+  sha512sum -c install-tl-unx.tar.gz.sha512
+
+  gpg --quiet --import texlive.asc
+  sig1=$(gpg --list-keys | sed -n '4p' | sed 's/ //g')
+  sig2=$(gpg --verify install-tl-unx.tar.gz.sha512.asc 2>&1 | sed -n '7p' | sed -E 's/^[^:]+://;s/ //g')
+
+  if [ $? -eq 0 ]
+    then echo ":: OK"
+    else
+      echo ":: cannot veify!"
+      echo -n ":: continue anyway? (y/n)"
+      read -n 2 ANS
+      [ $ANS == "y" ] || exit 1
+  fi
+fi
+
+echo ":: unpacking the installer..."
+tar -xzf install-tl-unx.tar.gz --strip-components 1
+
+
+## INSTALLATION PROCESS
+
+echo ":: starting the installer..."
+TEXLIVE_INSTALL_PREFIX=$prefix ./install-tl \
+  --scheme scheme-minimal --no-interaction
+
+echo ":: installation complete!"
+
+
+## POST-INSTALLATION PHASE
+
+# Fix PATH, so that we make TeXlive programs visible. To do so, we need to
+# extract the year that is also the version of the TeX Live just installed.
+year=`sed -n '1p' release-texlive.txt | sed -E 's/^[^0-9]+//g'`
+
+# Write an appropriate file in $HOME.
+cat <<EOF > ~/.tlrc
+#!/bin/sh
+export PATH=$prefix/$year/bin/x86_64-linux:\$PATH
+export MANPATH=$prefix/$year/texmf-dist/doc/man:\$MANPATH
+export INFOPATH=$prefix/$year/texmf-dist/doc/info:\$INFOPATH
+EOF
+
+source ~/.tlrc
+
+# Installing some packages we cannot live without, but that are not bundled
+# in the minimal installation.
+tlmgr install latex-bin
+tlmgr install texlive-scripts-extra
+tlmgr install texdoc
+tlmgr install texliveonfly
+#tlmgr install hyphen-{english,italian,french,german,greek}
+
+cat <<EOF
+#
+# *************************
+# * Task left to the user *
+# *************************
+#
+# Append the following line at the
+# end of (for example) '~/.bashrc':
+#
+#   [ -f ~/.tlrc ] && source ~/.tlrc
+#
+# and source it afterwards.
+#
+# By the way, I have done my work.
+#
+# Bye :)
+#
+EOF
+

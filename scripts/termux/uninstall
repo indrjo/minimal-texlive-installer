@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# TeXLive uninstaller.
+pkg uninstall texlive-installer texlive-bin
+find $PREFIX -type d -iname "texlive*" -exec rm -rfv {} \;
+rm -rfv ~/.texlive*
