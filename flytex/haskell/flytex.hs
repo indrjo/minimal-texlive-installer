@@ -173,48 +173,37 @@ tlmgrMultipleInstall fp (pkg:pkgs) =
 -- Let us turn our focus on searching packages now. To do so, let us start
 -- from a descriptive example.
 --
---  | $ tlmgr search --global --file tikz.sty
---  | tlmgr: package repository [...]
---  | biblatex-ext:
---  |   texmf-dist/tex/latex/biblatex-ext/biblatex-ext-oasymb-tikz.sty
---  | circuitikz:
---  |   texmf-dist/tex/latex/circuitikz/circuitikz.sty
---  | hf-tikz:
---  |   texmf-dist/tex/latex/hf-tikz/hf-tikz.sty
---  | interfaces:
---  |   texmf-dist/tex/latex/interfaces/interfaces-tikz.sty
---  | kinematikz:
---  |   texmf-dist/tex/latex/kinematikz/kinematikz.sty
---  | lwarp:
---  |   texmf-dist/tex/latex/lwarp/lwarp-tikz.sty
---  | moderncv:
---  |   texmf-dist/tex/latex/moderncv/moderncviconstikz.sty
---  | pgf:
---  |   texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
---  | pinoutikz:
---  |   texmf-dist/tex/latex/pinoutikz/pinoutikz.sty
---  | puyotikz:
---  |   texmf-dist/tex/latex/puyotikz/puyotikz.sty
---  | quantikz:
---  |   texmf-dist/tex/latex/quantikz/quantikz.sty
---  | sa-tikz:
---  |   texmf-dist/tex/latex/sa-tikz/sa-tikz.sty
+-- | $ tlmgr search --global --file caption.sty
+-- | tlmgr: package repository [...]
+-- | caption:
+-- | 	 texmf-dist/tex/latex/caption/bicaption.sty
+-- | 	 texmf-dist/tex/latex/caption/caption.sty
+-- | 	 texmf-dist/tex/latex/caption/ltcaption.sty
+-- | 	 texmf-dist/tex/latex/caption/subcaption.sty
+-- | ccaption:
+-- | 	 texmf-dist/tex/latex/ccaption/ccaption.sty
+-- | lwarp:
+-- | 	 texmf-dist/tex/latex/lwarp/lwarp-caption.sty
+-- | 	 texmf-dist/tex/latex/lwarp/lwarp-ltcaption.sty
+-- | 	 texmf-dist/tex/latex/lwarp/lwarp-mcaption.sty
+-- | 	 texmf-dist/tex/latex/lwarp/lwarp-subcaption.sty
+-- | mcaption:
+-- | 	 texmf-dist/tex/latex/mcaption/mcaption.sty
 --
--- The first line just tells the repository interrogated. Anyway, the other
--- lines are the ones very interesting: there is a sequence of
+-- The first line just tells the repository interrogated, we cannot do not
+-- care here. The other lines are the ones very interesting: there is a
+-- sequence of
 -- 
---  <package>:
---    <path>
+--  package:
+--    path1
+--    path2
+--    ...
+--    pathN
 --
--- where the <path>s end with `tikz.sty`. In this case, we are looking for
--- exactly `tikz.sty`, then we want only `pgf`.
-
--- Thus part of the work is to extract from the sequence of
--- 
---  <package>:
---    <path>
---
--- the packages containing the given file.
+-- In our example, the paths end with `caption.sty`. In this case, we are
+-- looking for exactly `caption.sty` and not for, say, `ccaption.sty`. 
+-- Thus part of the work is to extract from the sequence above only the
+-- packages containing the given file.
 findPackages :: String -> [String] -> [String]
 findPackages fp (ln1:ln2:lns) =
   case ln2 of

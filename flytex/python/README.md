@@ -22,7 +22,7 @@ For example, instead of writing:
 ```
 $ lualatex --synctex=1 hello.tex
 ```
-just put ```flytex.py``` before:
+just put ```flytex``` before:
 ```
-$ flytex.py lualatex --synctex=1 hello.tex
+$ flytex lualatex --synctex=1 hello.tex
 ```

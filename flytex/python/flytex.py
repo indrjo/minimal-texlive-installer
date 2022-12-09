@@ -89,16 +89,7 @@ def tlmgr_install(pkg):
 # It is best we provide a function to perform multiple installations. For
 # a list of packages corresponding to a given missing file, install them
 # one by one; just stop with a Left message as one cannot be installed.
-def tlmgr_multiple_install(fp, pkgs): 
-#  if pkgs == []:
-#    return (0, 'all missing packages for \'' + fp + '\' installed')
-#  else:
-#    pkg, others = pkgs[0], pkgs[1:]
-#    (exit_code, res_str) = tlmgr_install(pkg)
-#    if exit_code == 0:
-#      return tlmgr_multiple_install(fp, others)
-#    else:
-#      return (exit_code, res_str)
+def tlmgr_multiple_install(fp, pkgs):
   for pkg in pkgs:
     (exit_code, exit_text) = tlmgr_install(pkg)
     if exit_code != 0:
@@ -108,68 +99,48 @@ def tlmgr_multiple_install(fp, pkgs):
 # Let us turn our focus on searching packages now. To do so, let us start
 # from a descriptive example.
 #
-#  | $ tlmgr search --global --file tikz.sty
-#  | tlmgr: package repository [...]
-#  | biblatex-ext:
-#  |   texmf-dist/tex/latex/biblatex-ext/biblatex-ext-oasymb-tikz.sty
-#  | circuitikz:
-#  |   texmf-dist/tex/latex/circuitikz/circuitikz.sty
-#  | hf-tikz:
-#  |   texmf-dist/tex/latex/hf-tikz/hf-tikz.sty
-#  | interfaces:
-#  |   texmf-dist/tex/latex/interfaces/interfaces-tikz.sty
-#  | kinematikz:
-#  |   texmf-dist/tex/latex/kinematikz/kinematikz.sty
-#  | lwarp:
-#  |   texmf-dist/tex/latex/lwarp/lwarp-tikz.sty
-#  | moderncv:
-#  |   texmf-dist/tex/latex/moderncv/moderncviconstikz.sty
-#  | pgf:
-#  |   texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
-#  | pinoutikz:
-#  |   texmf-dist/tex/latex/pinoutikz/pinoutikz.sty
-#  | puyotikz:
-#  |   texmf-dist/tex/latex/puyotikz/puyotikz.sty
-#  | quantikz:
-#  |   texmf-dist/tex/latex/quantikz/quantikz.sty
-#  | sa-tikz:
-#  |   texmf-dist/tex/latex/sa-tikz/sa-tikz.sty
+# | $ tlmgr search --global --file caption.sty
+# | tlmgr: package repository [...]
+# | caption:
+# | 	 texmf-dist/tex/latex/caption/bicaption.sty
+# | 	 texmf-dist/tex/latex/caption/caption.sty
+# | 	 texmf-dist/tex/latex/caption/ltcaption.sty
+# | 	 texmf-dist/tex/latex/caption/subcaption.sty
+# | ccaption:
+# | 	 texmf-dist/tex/latex/ccaption/ccaption.sty
+# | lwarp:
+# | 	 texmf-dist/tex/latex/lwarp/lwarp-caption.sty
+# | 	 texmf-dist/tex/latex/lwarp/lwarp-ltcaption.sty
+# | 	 texmf-dist/tex/latex/lwarp/lwarp-mcaption.sty
+# | 	 texmf-dist/tex/latex/lwarp/lwarp-subcaption.sty
+# | mcaption:
+# | 	 texmf-dist/tex/latex/mcaption/mcaption.sty
 #
-# The first line just tells the repository interrogated. Anyway, the other
-# lines are the ones very interesting: there is a sequence of
+# The first line just tells the repository interrogated, we cannot do not
+# care here. The other lines are the ones very interesting: there is a
+# sequence of
 # 
-#  <package>:
-#    <path>
+#  package:
+#    path1
+#    path2
+#    ...
+#    pathN
 #
-# where the <path>s end with `tikz.sty`. In this case, we are looking for
-# exactly `tikz.sty`, then we want only `pgf`.
-
-# Thus part of the work is to extract from the sequence of
-# 
-#  <package>:
-#    <path>
-#
-# the packages containing the given file.
+# In our example, the paths end with `caption.sty`. In this case, we are
+# looking for exactly `caption.sty` and not for, say, `ccaption.sty`. 
+# Thus part of the work is to extract from the sequence above only the
+# packages containing the given file. Thus part of the work is to extract 
+# from the sequence above the packages containing the given file.
 def find_packages(fp, lns):
-  if len(lns) >= 2:
-    pkg, path, rem = lns[0], lns[1], lns[2:]
-    if path.endswith('/' + fp):
-      return [pkg[:-1]] + find_packages(fp, rem)
-    else:
-      return find_packages(fp, rem)
-  else:
-    return []
-'''
-  pkgs_found = []
-  current_pkg = lns[0][:-1]
+  pkgs = []
+  pkg = lns[0][:-1]
   for ln in lns[1:]:
     if ln.startswith('\t'):
       if ln.endswith('/' + fp):
-        pkgs_found.append(current_pkg)
+        pkgs.append(pkg)
     else:
-      current_pkg = ln[:-1]
-  return pkgs_found
-'''
+      pkg = ln[:-1]
+  return pkgs
 
 # Make tlmgr look for packages containing the given file.
 def tlmgr_search(fp):
@@ -242,10 +213,10 @@ def find_missings(err_str):
 # installs them; thus, a new attempt to run the same TeXCommand is made.
 
 def find(p, xs):
-  if xs == []:
-    return None
-  else:
-    return xs[0] if p(xs[0]) else find(p, xs[1:])
+  for x in xs:
+    if p(x):
+      return x
+  return None
 
 def flytex(tex_cmd):
   (exit_code, out_str, _) = flytex_exec(tex_cmd)
