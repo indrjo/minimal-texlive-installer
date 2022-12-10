@@ -21,27 +21,28 @@ sed 's/scheme-full/scheme-minimal/' \
   $PREFIX/opt/texlive/termux.profile > \
   $PREFIX/opt/texlive/termux-install-minimal.profile
 
-echo ":: starting the installer..."
+echo -e "\\n:: starting the installer...\\n"
 $PREFIX/opt/texlive/install-tl/install-tl \
   --custom-bin $PREFIX/bin/texlive \
   --profile $PREFIX/opt/texlive/termux-install-minimal.profile
   # --profile $PREFIX/opt/texlive/termux.profile
 
-echo ":: patching the TeXlive just installed..."
+echo -e "\\n:: patching the TeXlive just installed...\\n"
 $PREFIX/bin/termux-patch-texlive
 
-echo ":: installing some TeXlive packages before..."
+echo -e "\\n:: installing some TeXlive packages before...\\n"
 tlmgr install texlive-scripts-extra
 tlmgr install latex-bin
 tlmgr install texliveonfly
 
-echo ":: generating missing formats..."
+echo -e "\\n:: generating missing formats...\\n"
 fmtutil-sys --byfmt pdflatex
 fmtutil-sys --byfmt lualatex
 
-echo ":: conclusive fixes..."
+echo -e "\\n:: conclusive fixes...\\n"
 updmap-sys
 texlinks
 
-echo ":: All done. Restart the shell or source $PREFIX/etc/profile.d/texlive.sh to add the texlive programs to \$PATH."
+echo -e "\\n:: All done."
+echo -e ":: Restart the shell or source $PREFIX/etc/profile.d/texlive.sh to add the TeX Live programs to \$PATH.\\n"
 
