@@ -203,9 +203,12 @@ def make_TeX_command():
 # Inspect a string for a certain pattern to get the name of the missing
 # package. The output is always a list with length <=1.
 def find_missings(err_str):
-  not_found = \
-    re.match('! (?:La)*TeX Error: File `([^\']+)\' not found.', err_str)
-  return list(not_found.groups())
+  try:
+    not_found = \
+      re.match('! (?:La)*TeX Error: File `([^\']+)\' not found.', err_str)
+    return list(not_found.groups())
+  except:
+    return []
 
 # This giant function takes a TeXCommand element and make the underlying 
 # system run it. If no error arises, fine; otherwise, the program tries to
