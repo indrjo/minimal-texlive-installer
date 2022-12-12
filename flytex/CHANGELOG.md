@@ -68,5 +68,5 @@ findPackages fp (pkg:path:other) =
 findPackages _ _ = []
 ```
 
-In the Python version: *yet to come...*
+In the Python version: temporary patched too. (See source code)
 
