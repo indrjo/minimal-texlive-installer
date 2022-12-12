@@ -75,12 +75,6 @@ def flytex_exec(cmd, inp=''):
 # and wait tlmgr to end.
 def tlmgr_install(pkg):
   exit_code = flytex_exec('tlmgr install ' + pkg)[0]
-  '''
-  if exit_code == 0:
-    return (exit_code, 'installed \'' + pkg + '\'')
-  else:
-    return (exit_code, 'cannot install \'' + pkg + '\'!')
-  '''
   exit_text = \
     'installed \'' + pkg + '\'' if exit_code == 0 \
     else 'cannot install \'' + pkg + '\'!'
@@ -204,10 +198,14 @@ def make_TeX_command():
 # package. The output is always a list with length <=1.
 def find_missings(err_str):
   try:
+    # !!! The unique failure reason here is that err_str cannot match the
+    # !!! given pattern, in which case re.match returns None. In fact the
+    # !!! method .groups() cannot be applied to a None object.
     not_found = \
       re.match('! (?:La)*TeX Error: File `([^\']+)\' not found.', err_str)
     return list(not_found.groups())
   except:
+    # If no match, just return the empty list.
     return []
 
 # This giant function takes a TeXCommand element and make the underlying 
