@@ -9,9 +9,6 @@ import re
 # HOW THE PROGRAM COMMUNICATES
 # -------------------------------------------------------------------------
 
-# !!! No fatal massages here, that is no message will abort the execution
-# !!! of flytex. This feature may change or not, but for now that's it.
-
 # The general way, to say things.
 def say(hdl, who, text):
   print('[' + who + '] ' + text, file=hdl)
@@ -219,6 +216,7 @@ def find(p, xs):
       return x
   return None
 
+'''
 def flytex(tex_cmd):
   (exit_code, out_str, _) = flytex_exec(tex_cmd)
   if exit_code == 0:
@@ -235,6 +233,24 @@ def flytex(tex_cmd):
         flytex(tex_cmd)
       else:
         tlmgr_says_error(str_res)
+'''
+
+def flytex(tex_cmd):
+  (exit_code, out_str, _) = flytex_exec(tex_cmd)
+  while exit_code != 0:
+    tex_err = find(lambda s: s.startswith('!'), out_str.split('\n'))
+    missings = find_missings(tex_err)
+    if missings == []:
+      flytex_says_error(tex_err)
+      return None
+    else:
+      (exit_code, str_res) = tlmgr_search_and_install(missings[0])
+      if exit_code == 0:
+        tlmgr_says(str_res)
+        (exit_code, out_str, _) = flytex_exec(tex_cmd)
+      else:
+        tlmgr_says_error(str_res)
+  flytex_says('END!')
 
 
 # -------------------------------------------------------------------------
