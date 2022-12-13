@@ -3,7 +3,11 @@
 
 ## Issues present in all the ```flytex```-es here...
 
-### [3 dec 2022] More paths for one package
+### [13 dec 2022]
+
+Rewritten ```flytex.py``` in a more imperative fashion.
+
+### [3 dec 2022]
 
 ```
 $ tlmgr search --global --file caption.sty
