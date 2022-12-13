@@ -5,6 +5,8 @@ set -e -o pipefail
 # Where all the installed TeXlive goes. It defaults to a directory in your
 # home called "texlive".
 prefix=~/texlive
+# Select the scheme to install. By default it is "minimal".
+scheme=minimal
 # Verify the installer before running it? By default, do not do it. It is
 # recommended to do so, though.
 verify_installer=no
@@ -14,6 +16,10 @@ while [ $# -gt 0 ]; do
   case $1 in
     --prefix=*)
       prefix=${1#*=}
+      shift
+    ;;
+    --scheme=*)
+      scheme=${1#*=}
       shift
     ;;
     --verify-installer)
@@ -44,7 +50,7 @@ if [ $? -eq 0 ]
     exit
 fi
 
-if [ $verify_installer == "yes" ]; then
+if [ $verify_installer == yes ]; then
   echo ":: verifying the installer... "
   wget -q http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz.sha512
   wget -q http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz.sha512.asc
@@ -57,12 +63,13 @@ if [ $verify_installer == "yes" ]; then
   sig2=$(gpg --verify install-tl-unx.tar.gz.sha512.asc 2>&1 | sed -n '7p' | sed -E 's/^[^:]+://;s/ //g')
 
   if [ $? -eq 0 ]
-    then echo ":: OK"
+    then
+      echo ":: OK"
     else
       echo ":: cannot veify!"
       echo -n ":: continue anyway? (y/n)"
       read -n 2 ANS
-      [ $ANS == "y" ] || exit 1
+      [ $ANS == y ] || exit 1
   fi
 fi
 
@@ -74,7 +81,7 @@ tar -xzf install-tl-unx.tar.gz --strip-components 1
 
 echo ":: starting the installer..."
 TEXLIVE_INSTALL_PREFIX=$prefix ./install-tl \
-  --scheme scheme-minimal --no-interaction
+  --scheme scheme-$scheme --no-interaction
 
 echo ":: installation complete!"
 
@@ -88,6 +95,7 @@ year=`sed -n '1p' release-texlive.txt | sed -E 's/^[^0-9]+//g'`
 # Write an appropriate file in $HOME.
 cat <<EOF > ~/.tlrc
 #!/bin/sh
+
 export PATH=$prefix/$year/bin/x86_64-linux:\$PATH
 export MANPATH=$prefix/$year/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$prefix/$year/texmf-dist/doc/info:\$INFOPATH
@@ -95,13 +103,16 @@ EOF
 
 source ~/.tlrc
 
-# Installing some packages we cannot live without, but that are not bundled
-# in the minimal installation.
-tlmgr install latex-bin
-tlmgr install texlive-scripts-extra
-tlmgr install texdoc
-tlmgr install texliveonfly
-#tlmgr install hyphen-{english,italian,french,german,greek}
+# Some post-install work
+if [ ! $scheme == full ]; then
+  # Installing some packages we cannot live without, but are not bundled in
+  #the minimal installation.
+  tlmgr install latex-bin
+  tlmgr install texlive-scripts-extra
+  tlmgr install texdoc
+  tlmgr install texliveonfly
+  tlmgr install hyphen-{english,italian,french,german,greek}
+fi
 
 cat <<EOF
 #
@@ -121,4 +132,7 @@ cat <<EOF
 # Bye :)
 #
 EOF
+
+# You do not need the installer anymore, so you can get rid of it.
+#cd .. && rm -rf $install_dir
 

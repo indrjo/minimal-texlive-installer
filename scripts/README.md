@@ -20,7 +20,16 @@ $ ./install-minimal --prefix=HERE
 ```
 where instead of ```HERE``` put your choice. Just make sure you have the right to write where you want.
 
-### What ```install-minimal``` does
+* **(New)** You can select the scheme to install:
+```
+$ ./install-minimal --scheme=SCHEME
+```
+Here, ```SCHEME``` could be: ```minimal```, ```basic```, ```small```, ```medium```, ```full```, etc...
+
+**(Remark)** The support of ```--scheme=SCHEME``` seems to contrast the underlying spirit of this repo, that is getting a *minimal* TeX Live.
+
+
+## Details of what ```install-minimal``` does
 
 1. Downloads ```install-tl-unx.tar.gz```. If you have passed the option ```--verify-installer```, check its integrity. Then, unpack the compressed archive just downloaded.
 
@@ -34,4 +43,12 @@ At the end, you should append the following line at the end of (for example) ```
 
 ```
 [ -f ~/.tlrc ] && source ~/.tlrc
+```
+
+
+## Notes
+
+You may want to remove the installer:
+```
+$ rm -rf ~/tl-installer
 ```
