@@ -216,24 +216,6 @@ def find(p, xs):
       return x
   return None
 
-'''
-def flytex(tex_cmd):
-  (exit_code, out_str, _) = flytex_exec(tex_cmd)
-  if exit_code == 0:
-    flytex_says('END!')
-  else:
-    tex_err = find(lambda s: s.startswith('!'), out_str.split('\n'))
-    missings = find_missings(tex_err)
-    if missings == []:
-      flytex_says_error(tex_err)
-    else:
-      (exit_code, str_res) = tlmgr_search_and_install(missings[0])
-      if exit_code == 0:
-        tlmgr_says(str_res)
-        flytex(tex_cmd)
-      else:
-        tlmgr_says_error(str_res)
-'''
 
 def flytex(tex_cmd):
   (exit_code, out_str, _) = flytex_exec(tex_cmd)
