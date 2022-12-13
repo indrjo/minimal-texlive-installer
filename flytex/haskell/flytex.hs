@@ -360,7 +360,7 @@ flytex tex_cmd =
           -- to locate.
           case find (isPrefixOf "!") (lines out_str) of
             -- !!! The program should not arrive at this point, but ghc may
-            -- !!! complain all not cases are not covered, thus that's it.
+            -- !!! complain if all not cases are not covered.
             Nothing -> undefined
             -- Of course, this program can't handle every error may arise.
             -- If the error says that one file is missing, then it is bread
