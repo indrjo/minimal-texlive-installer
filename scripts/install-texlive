@@ -66,7 +66,7 @@ if [ $verify_installer == yes ]; then
     then
       echo ":: OK"
     else
-      echo ":: cannot veify!"
+      echo ":: cannot verify!"
       echo -n ":: continue anyway? (y/n)"
       read -n 2 ANS
       [ $ANS == y ] || exit 1
