@@ -101,19 +101,6 @@ export MANPATH=$prefix/$year/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$prefix/$year/texmf-dist/doc/info:\$INFOPATH
 EOF
 
-source ~/.tlrc
-
-# Some post-install work
-if [ ! $scheme == full ]; then
-  # Installing some packages we cannot live without, but are not bundled in
-  #the minimal installation.
-  tlmgr install latex-bin
-  tlmgr install texlive-scripts-extra
-  tlmgr install texdoc
-  tlmgr install texliveonfly
-  tlmgr install hyphen-{english,italian,french,german,greek}
-fi
-
 cat <<EOF
 #
 # *************************

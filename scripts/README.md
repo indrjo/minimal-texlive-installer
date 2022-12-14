@@ -1,43 +1,37 @@
 # Scripts
 
-## The installer
+## Install TeX Live
 
-The minimal TeX Live installer here is the shell script ```install-minimal```.
-
-If you want to stick to few defaults, it is sufficient to issue the command
+The script ```install-texlive``` helps you to install TeX Live on your GNU/Linux. If you accept some defaults, it is sufficient to issue the command
 ```
-$ ./install-minimal
+$ ./install-texlive
 ```
-and wait few minutes.
+and then wait few minutes.
 
-Here the defaults are the following:
+The defaults are the following:
 
-* As ```install-tl-unx.tar.gz``` is downloaded, you can make ```install-minimal``` check for you its integrity. If you want that, just pass the option ```--verify-installer```.
+* As ```install-tl-unx.tar.gz``` is downloaded, you can make ```install-texlive``` check for you the integrity of the installer. Just pass the option ```--verify-installer``` to do so, because this task is skipped by default.
 
-* ```TEXLIVE_INSTALL_PREFIX``` (the directory where all TeX Live is allocated) is set to ```~/texlive```. If you prefer another location,
+* ```TEXLIVE_INSTALL_PREFIX``` (the directory where all TeX Live is allocated) is set to ```~/texlive``` by default in this script. If you prefer another location,
 ```
-$ ./install-minimal --prefix=HERE
+$ ./install-texlive --prefix=HERE
 ```
-where instead of ```HERE``` put your choice. Just make sure you have the right to write where you want.
+where instead of ```HERE``` put your choice. **(Attention)** Just make sure you have the right to write where you want.
 
 * **(New)** You can select the scheme to install:
 ```
-$ ./install-minimal --scheme=SCHEME
+$ ./install-texlive --scheme=SCHEME
 ```
 Here, ```SCHEME``` could be: ```minimal```, ```basic```, ```small```, ```medium```, ```full```, etc...
 
-**(Remark)** The support of ```--scheme=SCHEME``` seems to contrast the underlying spirit of this repo, that is getting a *minimal* TeX Live.
 
-
-## Details of what ```install-minimal``` does
+### Details
 
 1. Downloads ```install-tl-unx.tar.gz```. If you have passed the option ```--verify-installer```, check its integrity. Then, unpack the compressed archive just downloaded.
 
 3. Start the installer ```install-tl```, and wait it to finish all the work. It should not be required any intervention from the user.
 
 4. Write the file ```~/.tlrc``` to adjust ```PATH``` and make visible all the TeX Live executables and other stuff related to it.
-
-5. Install some extra stuff: ```latex-bin```, ```texlive-scripts-extra```, ```texdoc``` and ```texliveonfly```.
 
 At the end, you should append the following line at the end of (for example) ```~/.bashrc```:
 
@@ -46,7 +40,9 @@ At the end, you should append the following line at the end of (for example) ```
 ```
 
 
-## Notes
+### Post installation
+
+If you have installed the ```minimal``` scheme, it is recommended to install some extra stuff to: ```latex-bin```, ```texlive-scripts-extra```, ```texdoc``` and ```texliveonfly```. It is also recommended to install the packages ```hyphen-LANG``` for the languages you use. Here, ```LANG``` could be, for example, ```english```, ```german```, ```french```, ```italian```, and so on...
 
 You may want to remove the installer:
 ```
