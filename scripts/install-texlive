@@ -2,6 +2,9 @@
 
 set -e -o pipefail
 
+
+# PARSING COMMANDLINE ARGUMENTS *******************************************
+
 # Where all the installed TeXlive goes. It defaults to a directory in your
 # home called "texlive".
 prefix=~/texlive
@@ -10,6 +13,9 @@ scheme=minimal
 # Verify the installer before running it? By default, do not do it. It is
 # recommended to do so, though.
 verify_installer=no
+# Remove the installer once the installation script has terminated? By 
+# default, yes.
+keep_installer=no
 
 # Parsing the commandline arguments.
 while [ $# -gt 0 ]; do
@@ -26,6 +32,10 @@ while [ $# -gt 0 ]; do
       verify_installer=yes
       shift
     ;;
+    --keep-installer)
+      keep_installer=yes
+      shift
+    ;;
     *)
       echo ":: unknown option: $1"
       exit 1
@@ -34,7 +44,7 @@ while [ $# -gt 0 ]; do
 done
 
 
-## PREPARING FOR THE INSTALLER
+## PREPARING FOR THE INSTALLER ********************************************
 
 # Let us choose a directory where to download the installer and move there.
 install_dir=~/tl-installer
@@ -66,8 +76,7 @@ if [ $verify_installer == yes ]; then
     then
       echo ":: OK"
     else
-      echo ":: cannot verify!"
-      echo -n ":: continue anyway? (y/n)"
+      echo -n ":: cannot verify! continue anyway? (y/n)"
       read -n 2 ANS
       [ $ANS == y ] || exit 1
   fi
@@ -77,7 +86,7 @@ echo ":: unpacking the installer..."
 tar -xzf install-tl-unx.tar.gz --strip-components 1
 
 
-## INSTALLATION PROCESS
+## INSTALLATION PROCESS ***************************************************
 
 echo ":: starting the installer..."
 TEXLIVE_INSTALL_PREFIX=$prefix ./install-tl \
@@ -86,7 +95,7 @@ TEXLIVE_INSTALL_PREFIX=$prefix ./install-tl \
 echo ":: installation complete!"
 
 
-## POST-INSTALLATION PHASE
+## POST-INSTALLATION PHASE ************************************************
 
 # Fix PATH, so that we make TeXlive programs visible. To do so, we need to
 # extract the year that is also the version of the TeX Live just installed.
@@ -121,5 +130,5 @@ cat <<EOF
 EOF
 
 # You do not need the installer anymore, so you can get rid of it.
-#cd .. && rm -rf $install_dir
+[ $keep_installer == no ] && cd .. && rm -rf $install_dir
 
