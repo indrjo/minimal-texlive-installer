@@ -102,12 +102,12 @@ The installation on Android requires some work that is better not to explain in 
 
 ### Installation and post-installation
 
-Consider ```scripts/termux/install-minimal```.
+Consider ```scripts/termux-install-minimal-texlive```.
 
 
 ### Uninstall
 
-Have a look at ```scripts/termux/uninstall```.
+Have a look at ```scripts/termux-uninstall-texlive```.
 
 
 
