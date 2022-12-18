@@ -1,12 +1,32 @@
-# Scripts
+# Helper scripts
 
-## Install TeX Live
+## Install TeX Live on GNU/Linux
 
-The shell script ```install-texlive``` helps you to install TeX Live on your GNU/Linux. If you accept the defaults listed below, it is sufficient to issue the command
+The shell script ```install-texlive``` helps you to install TeX Live on GNU/Linux. You may want to read [this section](#defaults-and-customizations) before. If you accept the defaults, it is sufficient to issue the command
 ```
 $ ./install-texlive
 ```
 and then wait few minutes.
+
+This script write a file called ```.tlrc``` in you home which adjusts some paths for TeX Live. You should append the following line at the end of (for example) ```~/.bashrc```:
+```
+[ -f ~/.tlrc ] && source ~/.tlrc
+```
+
+**(Future project)** We can make ```install-texlive``` write that line by itself, instead of requiring users to do so... We can implement the option ```--no-adjust-bashrc```, making the script update ```~/.bashrc``` by default.
+
+If you have installed the ```minimal``` scheme (the default scheme, read [this](#defaults-and-customizations)), it is recommended to install some extra stuff:
+```
+$ tlmgr install latex-bin
+$ tlmgr install texlive-scripts-extra
+$ tlmgr install texdoc
+$ tlmgr install texliveonfly
+```
+It is also recommended to install the packages ```hyphen-LANG``` for the languages you use:
+```
+$ tlmgr install hyphen-LANG
+```
+Here, ```LANG``` could be, for example, ```english```, ```german```, ```french```, ```italian```, and so on...
 
 ### Defaults and customizations
 
@@ -29,35 +49,18 @@ Here, ```SCHEME``` could be: ```minimal```, ```basic```, ```small```, ```medium`
 $ ./install-texlive --keep-installer
 ```
 
-### Details
 
-1. Downloads ```install-tl-unx.tar.gz```. If you have passed the option ```--verify-installer```, check its integrity. Then, unpack the compressed archive just downloaded.
 
-3. Start the installer ```install-tl```, and wait it to finish all the work. It should not be required any intervention from the user.
+## Install TeX Live on Android
 
-4. Write the file ```~/.tlrc``` to adjust ```PATH``` and make visible all the TeX Live executables and other stuff related to it.
+**(Important)** The script ```install``` here is a modification of ```installer.sh```, which can be found [here](https://github.com/termux/termux-packages/blob/master/packages/texlive-installer/installer.sh).
 
-### Post installation
+**(Important)** This script modifies some parts of the package ```texlive-installer``` after it is installed. This behaviour is expected to change in future.
 
-You should append the following line at the end of (for example) ```~/.bashrc```:
+It is sufficient to issue the command
 ```
-[ -f ~/.tlrc ] && source ~/.tlrc
+$ ./termux-install-minimal-texlive
 ```
+from Termux. It manages installation and post installation process and applies some patches to make it work within the Termux environment.
 
-If you have installed the ```minimal``` scheme, it is recommended to install some extra stuff:
-```
-$ tlmgr install latex-bin
-$ tlmgr install texlive-scripts-extra
-$ tlmgr install texdoc
-$ tlmgr install texliveonfly
-```
-It is also recommended to install the packages ```hyphen-LANG``` for the languages you use:
-```
-$ tlmgr install hyphen-LANG
-```
-Here, ```LANG``` could be, for example, ```english```, ```german```, ```french```, ```italian```, and so on...
-
-You may want to remove the installer:
-```
-$ rm -rf ~/tl-installer
-```
+**(Warning)** Currently, this installer doesn't allow users to customize the installation through, say, commandline arguments.
