@@ -5,7 +5,7 @@ set -e -o pipefail
 
 # PARSING COMMANDLINE ARGUMENTS *******************************************
 
-# Where all the installed TeXlive goes. It defaults to a directory in your
+# Where all the installed TeX Live goes. It defaults to a directory in your
 # home called "texlive".
 prefix=~/texlive
 # Select the scheme to install. By default it is "minimal".
@@ -97,7 +97,7 @@ echo ":: installation complete!"
 
 ## POST-INSTALLATION PHASE ************************************************
 
-# Fix PATH, so that we make TeXlive programs visible. To do so, we need to
+# Fix PATH, so that we make TeX Live programs visible. To do so, we need to
 # extract the year that is also the version of the TeX Live just installed.
 year=`sed -n '1p' release-texlive.txt | sed -E 's/^[^0-9]+//g'`
 
