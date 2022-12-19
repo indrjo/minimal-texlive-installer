@@ -37,7 +37,7 @@ pgf
 
 # fonts
 libertine
-sourcedepro
+sourcecodepro
 
 # mathematical fonts
 libertinust1math
