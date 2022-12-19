@@ -15,12 +15,6 @@ while (my $ln = <DATA>) {
 
 __DATA__
 
-# packages we cannot live without
-texlive-scripts-extra
-latex-bin
-texdoc
-texliveonfly
-
 # classes
 suftesi
 
@@ -28,7 +22,11 @@ suftesi
 fontspec
 polyglossia
 babel
-hyphen-{english,german,french,italian,greek}
+hyphen-english
+hyphen-german
+hyphen-french
+hyphen-italian
+hyphen-greek
 microtype
 csquotes
 hyperref
@@ -41,11 +39,11 @@ sourcecodepro
 
 # mathematical fonts
 libertinust1math
-mathalfa
+mathalpha
 mathtools
-MnSymbol
+mnsymbol
 
 # other mathematical stuff
-tikzcd
+tikz-cd
 commutative-diagrams
 

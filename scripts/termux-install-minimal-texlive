@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This script handles the installation of a minimal TeXlive, followed by
+# This script handles the installation of a minimal TeX Live, followed by
 # some patches, additional tlmgr packages and other fixes...
 
 # This script is a modification of termux-install-tl which comes bundled
@@ -27,10 +27,10 @@ $PREFIX/opt/texlive/install-tl/install-tl \
   --profile $PREFIX/opt/texlive/termux-install-minimal.profile
   # --profile $PREFIX/opt/texlive/termux.profile
 
-echo -e "\\n:: patching the TeXlive just installed...\\n"
+echo -e "\\n:: patching the TeX Live just installed...\\n"
 $PREFIX/bin/termux-patch-texlive
 
-echo -e "\\n:: installing some TeXlive packages before...\\n"
+echo -e "\\n:: installing some TeX Live packages before...\\n"
 tlmgr install texlive-scripts-extra
 tlmgr install latex-bin
 tlmgr install texliveonfly
