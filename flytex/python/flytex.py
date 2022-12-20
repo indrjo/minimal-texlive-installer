@@ -61,7 +61,7 @@ def flytex_exec(cmd, inp=''):
 # INVOKING TLMGR
 #--------------------------------------------------------------------------
 
-# A minimal TeXlive has tlmgr who handles packages: not only you install
+# A minimal TeX Live has tlmgr who handles packages: not only you install
 # packages with it, but you can search packages containing a given file!
 # They are both interesting for our purpose.
 

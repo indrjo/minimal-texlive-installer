@@ -1,14 +1,15 @@
-#!/usr/bin/env perl -W
+#!/usr/bin/env -S perl -W
 
-# This tiny Perl script installs some basic packages after you have got your
-# minimal TeX Live. The list of packages starts directly below __DATA__.
-# Feel free to edit this list as your personal needs. Blank lines and lines
-# starting by "#" are not taken into account, so use them to organize your
-# list and add comments.
+# This tiny Perl script installs some basic packages after you have got a 
+# minimal TeX Live on your machine.
+# Here, there is a short code, concluded by __DATA__. The list of packages
+# starts directly below __DATA__. Feel free to edit this list as per your
+# personal needs. Blank lines and lines starting by "#" are not considered.
 
 while (my $ln = <DATA>) {
   if ($ln !~ /^\s*(#|$)/) {
     $ln =~ s/^\s+|\s+$//g;
+    #print "tlmgr install $ln\n";
     system "tlmgr install $ln";
   }
 }

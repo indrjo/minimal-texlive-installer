@@ -6,7 +6,7 @@
   -------------------------------------------------------------------------
   
   This machinery is not complicate at all. If you have the complete scheme
-  of TeXlive, commands like
+  of TeX Live, commands like
   
     $ your-tex-engine your-file.tex
   
@@ -16,15 +16,15 @@
   Maybe you know MiKTeX, who has the remarkable feature that withe same
   commands will try to install any missing package need for the creation
   of the final product. It is not a matter of minimalism, but out there is
-  a hell of packages: a complete installation of TeXLive takes around 4GB 
+  a hell of packages: a complete installation of TeX Live takes around 4GB 
   of memory and a lot of time to install. Although all the vivid interest
-  in this feature, TeXlive hasn't made a move in this direction yet.
+  in this feature, TeX Live hasn't made a move in this direction yet.
   
   Of course, someone else has thought the same and created a small Python
   script called "texliveonfly" to solve the problem. Unfortunately, this
   the program hasn't been receiving any update since 2011. Although this
-  possibility, if you want TeXlive you are encouraged to make a complete
-  install, until TeXlive itself provides its own "TeXlive on the fly".
+  possibility, if you want TeX Live you are encouraged to make a complete
+  install, until TeX Live itself provides its own "TeX Live on the fly".
   
   
   THIS PROGRAM
@@ -54,15 +54,15 @@
   pdf[la]tex, lua[la]tex, xe[la]tex, etc... When you run any of them, you
   are described quite in detailed way the process of creation. This program
   just reads all this output for you: as soon as a complaint of missing 
-  package is detected, the TeXLive program tlmgr is invoked. Just make sure
+  package is detected, the TeX Live program tlmgr is invoked. Just make sure
   to be connected to internet.
   
   
   REQUIREMENTS
   -------------------------------------------------------------------------
   
-  You must have at least a mimimal scheme of TeXlive (you cannot have less
-  than this). As such, TeXlive is equipped with tlmgr.
+  You must have at least a mimimal scheme of TeX Live (you cannot have less
+  than this). As such, TeX Live is equipped with tlmgr.
   
   This program is designed having GHC as Haskell compiler. You can compile
   this program, or you can keep it as a script and run it via runghc.
@@ -105,7 +105,7 @@
 
 ;;; INVOKING TLMGR
 
-;; A minimal TeXlive has tlmgr who handles packages: not only you install
+;; A minimal TeX Live has tlmgr who handles packages: not only you install
 ;; packages with it, but you can search packages containing a given file!
 ;; They are both interesting for our purpose.
 
