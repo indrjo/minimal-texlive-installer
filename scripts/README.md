@@ -1,5 +1,7 @@
 # Helper scripts
 
+
+
 ## Install TeX Live on GNU/Linux
 
 The shell script ```install-texlive``` helps you to install TeX Live on GNU/Linux. You may want to read [this section](#defaults-and-customizations) before. If you accept the defaults, it is sufficient to issue the command
@@ -12,8 +14,6 @@ This script write a file called ```.tlrc``` in you home which adjusts some paths
 ```
 [ -f ~/.tlrc ] && source ~/.tlrc
 ```
-
-**(Future project)** We can make ```install-texlive``` write that line by itself, instead of requiring users to do so... We can implement the option ```--no-adjust-bashrc```, making the script update ```~/.bashrc``` by default.
 
 If you have installed the ```minimal``` scheme (the default scheme, read [this](#defaults-and-customizations)), it is recommended to install some extra stuff:
 ```
@@ -28,26 +28,21 @@ $ tlmgr install hyphen-LANG
 ```
 Here, ```LANG``` could be, for example, ```english```, ```german```, ```french```, ```italian```, and so on...
 
+Once all it is fine, you may want to remove the installer with all the annexed stuff: to do so
+```
+$ rm -rf ~/.texlive-installer
+```
+
 ### Defaults and customizations
 
-* As ```install-tl-unx.tar.gz``` is downloaded, you can make ```install-texlive``` check its integrity. Just pass the option ```--verify-installer``` to do so, because this step is skipped by default.
+* As ```install-tl-unx.tar.gz``` is downloaded, you can make ```install-texlive``` check its integrity for you. Just pass the option ```--verify-installer``` to do so, because this step is skipped by default.
 
-* ```TEXLIVE_INSTALL_PREFIX``` (the directory where all TeX Live is allocated) is set to ```~/texlive``` by default. If you prefer another location,
-```
-$ ./install-texlive --prefix=HERE
-```
-where instead of ```HERE``` put your choice. **(Attention)** Just make sure you have the right to write where you want.
+* The environment variable ```TEXLIVE_INSTALL_PREFIX``` (the directory where all TeX Live is allocated) is set to ```~/texlive``` by default. If you prefer another location, pass the option ```--prefix=HERE```, where instead of ```HERE``` put your choice. **(Attention)** Just make sure you have the right to write where you want.
 
-* You can select the scheme to install:
-```
-$ ./install-texlive --scheme=SCHEME
-```
-Here, ```SCHEME``` could be: ```minimal```, ```basic```, ```small```, ```medium```, ```full```, etc...
+* You can select the scheme to install, by passing ```--scheme=SCHEME```. Here, ```SCHEME``` could be for example: ```minimal``` (the default), ```basic```, ```small```, ```medium```, ```full```, etc... **(Attention)** This repository is thought to offer a valid *minimal* TeX Live primarily, although it works fine for any scheme you prefer.
 
-* ```install-tl-unx.tar.gz``` is downloaded inside ```~/tl-installer``` unpacked therein. Once the installation terminates, that directory will be deleted. If you want to keep it instead,
-```
-$ ./install-texlive --keep-installer
-```
+* An appropriate file that adds to your paths the ones of TeX Live
+is created. By default, the file is ```~/.tlrc```, but you can choose any path you prefer, using ```--tlrc=HERE```. Afterwards, you must write on ```~/.bashrc``` to source this file. It is done for you by default; to prevent that, just pass the option ```--no-adjust-bashrc```.
 
 
 
@@ -55,12 +50,10 @@ $ ./install-texlive --keep-installer
 
 **(Important)** The script ```install``` here is a modification of ```installer.sh```, which can be found [here](https://github.com/termux/termux-packages/blob/master/packages/texlive-installer/installer.sh).
 
-**(Important)** This script modifies some parts of the package ```texlive-installer``` after it is installed. This behaviour is expected to change in future.
-
 It is sufficient to issue the command
 ```
 $ ./termux-install-minimal-texlive
 ```
-from Termux. It manages installation and post installation process and applies some patches to make it work within the Termux environment.
+from Termux. It manages both installation and post installation process and applies some patches to make it work within the Termux environment.
 
-**(Warning)** Currently, this installer doesn't allow users to customize the installation through, say, commandline arguments.
+**(Note)** Currently, this installer doesn't allow users to customize the installation as you can for any other GNU/Linux.

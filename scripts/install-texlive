@@ -10,12 +10,17 @@ set -e -o pipefail
 prefix=~/texlive
 # Select the scheme to install. By default it is "minimal".
 scheme=minimal
+# Tell the installer location, that is the directory where to put all the 
+# stuff needed for the installation.
+installer_dir=~/.texlive-installer
 # Verify the installer before running it? By default, do not do it. It is
 # recommended to do so, though.
 verify_installer=no
-# Remove the installer once the installation script has terminated? By 
-# default, yes.
-keep_installer=no
+# Write a file to be sourced and which exports new paths containing those
+# ones of TeX Live
+texliverc=~/.tlrc
+# By default, adjust ~/.bashrc to register the new paths for TeX Live. 
+adjust_bashrc=yes
 
 # Parsing the commandline arguments.
 while [ $# -gt 0 ]; do
@@ -28,12 +33,20 @@ while [ $# -gt 0 ]; do
       scheme=${1#*=}
       shift
     ;;
+    --installer-dir=*)
+      installer_dir=${1#*=}
+      shift
+    ;;
     --verify-installer)
       verify_installer=yes
       shift
     ;;
-    --keep-installer)
-      keep_installer=yes
+    --tlrc=*)
+      texliverc=${1#*=}
+      shift
+    ;;
+    --no-adjust-bashrc)
+      adjust_bashrc=no
       shift
     ;;
     *)
@@ -47,9 +60,8 @@ done
 ## PREPARING FOR THE INSTALLER ********************************************
 
 # Let us choose a directory where to download the installer and move there.
-install_dir=~/tl-installer
-[ -d $install_dir ] || mkdir $install_dir
-cd $install_dir
+[ -d $installer_dir ] || mkdir $installer_dir
+cd $installer_dir
 
 echo -n ":: download install-tl-unx.tar.gz... "
 wget -q https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
@@ -102,33 +114,20 @@ echo ":: installation complete!"
 year=`sed -n '1p' release-texlive.txt | sed -E 's/^[^0-9]+//g'`
 
 # Write an appropriate file in $HOME.
-cat <<EOF > ~/.tlrc
+cat <<EOF > $texliverc
 #!/bin/sh
 
+# Adding TeX Live paths...
 export PATH=$prefix/$year/bin/x86_64-linux:\$PATH
 export MANPATH=$prefix/$year/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$prefix/$year/texmf-dist/doc/info:\$INFOPATH
 EOF
 
-cat <<EOF
-#
-# *************************
-# * Task left to the user *
-# *************************
-#
-# Append the following line at the
-# end of (for example) '~/.bashrc':
-#
-#   [ -f ~/.tlrc ] && source ~/.tlrc
-#
-# and source it afterwards.
-#
-# By the way, I have done my work.
-#
-# Bye :)
-#
+[ $adjust_bashrc == yes ] && cat <<EOF >> ~/.bashrc
+
+# Register TeX Live paths
+[ -f $texliverc ] && source $texliverc
 EOF
 
-# You do not need the installer anymore, so you can get rid of it.
-[ $keep_installer == no ] && cd .. && rm -rf $install_dir
+echo ":: paths written!"
 
