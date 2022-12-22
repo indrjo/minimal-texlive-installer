@@ -29,12 +29,16 @@ hyphen-french
 hyphen-italian
 hyphen-greek
 microtype
+indentfirst
 csquotes
 hyperref
 biblatex
 pgf
+adjustbox
+booktabs
 
 # fonts
+anyfontsize
 libertine
 sourcecodepro
 
@@ -43,6 +47,7 @@ libertinust1math
 mathalpha
 mathtools
 mnsymbol
+amsthm
 
 # other mathematical stuff
 tikz-cd

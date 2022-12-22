@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 
 # TeX Live uninstaller.
-rm -rf ~/{,.}texlive*
+rm -rfv ~/{,.}texlive*
 

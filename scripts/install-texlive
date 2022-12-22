@@ -60,7 +60,7 @@ done
 ## PREPARING FOR THE INSTALLER ********************************************
 
 # Let us choose a directory where to download the installer and move there.
-[ -d $installer_dir ] || mkdir $installer_dir
+[ -d $installer_dir ] || mkdir -p $installer_dir
 cd $installer_dir
 
 echo -n ":: download install-tl-unx.tar.gz... "
@@ -127,6 +127,7 @@ EOF
 
 # Register TeX Live paths
 [ -f $texliverc ] && source $texliverc
+
 EOF
 
 echo ":: paths written!"
