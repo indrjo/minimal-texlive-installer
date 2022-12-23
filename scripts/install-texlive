@@ -8,7 +8,7 @@ set -e -o pipefail
 # Where all the installed TeX Live goes. It defaults to a directory in your
 # home called "texlive".
 prefix=~/texlive
-# Select the scheme to install. By default it is "minimal".
+# Select the scheme to install. By default, it is "minimal".
 scheme=minimal
 # Tell the installer location, that is the directory where to put all the 
 # stuff needed for the installation.
