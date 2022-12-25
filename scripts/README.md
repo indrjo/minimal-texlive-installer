@@ -78,7 +78,13 @@ from Termux. It manages both installation and post installation process and appl
 
 ## Uninstall TeX Live from GNU/Linux
 
-*To be refined...*
+Just run
+```
+$ ./uninstall-texlive
+```
+If you have installed TeX Live elsewhere, you can say where it is via ```--prefix=HERE```. Be careful!
+
+Once the uninstaller has finished, you may want to remove ```~/.tlrc``` and remove the lines sourcing it in ```~/.bashrc```. The script will not do that for you!
 
 
 

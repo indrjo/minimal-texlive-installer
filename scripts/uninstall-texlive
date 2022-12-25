@@ -1,5 +1,27 @@
 #!/usr/bin/env sh
 
-# TeX Live uninstaller.
-rm -rfv ~/{,.}texlive*
+set -e -o pipefail
+
+# PARSING COMMANDLINE ARGUMENTS *******************************************
+
+# Where all the installed TeX Live goes. It defaults to a directory in your
+# home called "texlive".
+prefix=~/texlive
+
+# Parsing the commandline arguments.
+while [ $# -gt 0 ]; do
+  case $1 in
+    --prefix=*)
+      prefix=${1#*=}
+      shift
+    ;;
+    *)
+      echo ":: unknown option: $1"
+      exit 1
+    ;;
+  esac
+done
+
+rm -rfv $prefix
+rm -rfv ~/.texlive
 
