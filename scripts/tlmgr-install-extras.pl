@@ -33,6 +33,7 @@ indentfirst
 csquotes
 hyperref
 biblatex
+biber
 pgf
 adjustbox
 booktabs
