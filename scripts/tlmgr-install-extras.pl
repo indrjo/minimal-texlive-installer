@@ -34,9 +34,9 @@ csquotes
 hyperref
 biblatex
 biber
-pgf
 adjustbox
 booktabs
+imakeidx
 
 # fonts
 anyfontsize
@@ -51,6 +51,7 @@ mnsymbol
 amsthm
 
 # other mathematical stuff
+pgf
 tikz-cd
 commutative-diagrams
 
