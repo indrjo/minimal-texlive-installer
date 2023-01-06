@@ -142,9 +142,9 @@ $ texliveonfly -c COMPILER -a '--synctex=1' FILE.tex
 
 Truth be said, ```texliveonfly.py``` is a very old software, it was written in 2011 ([click!](https://latex.org/forum/viewtopic.php?f=12&t=15194)) and it hasn' been receiving updates since ages from its author(s). On internet, you can find some repositories providing some changes and fixes (for example [this](https://github.com/maphy-psd/texliveonfly) of 2015), but it definitely seems a dead project.
 
-Another source of criticisms is that it was written on and for ```Ubuntu``` of that era. If you read its source code, you will notice, some software that exists no more is invoked. Fortunately, this happens if you want to use ```sudo``` or *similia*. If we install all in ```$HOME```, no problem.
+Another source of criticisms is that it was written on and for the Ubuntu of that era. If you read its source code, you will notice, some software that exists no more is invoked. Fortunately, this happens if you want to use ```sudo``` or *similia*. If we install all in ```$HOME```, no problem.
 
-Will ```texliveonfly``` return to life? Who knows. If one wants to read its source code and work on it, one hurdle could be that the code is poorly commented. If one wants to write its own *TeX Live on the fly*, this means work from zero, although the idea behind is simple. In the directory ```flytex/README.md```, you can find the basic mechanism behind.
+Will ```texliveonfly``` return to life? Who knows. If one wants to read its source code and work on it, one hurdle could be that the code is poorly commented. If one wants to write its own *TeX Live on the fly*, this means work from zero, although the idea behind is simple. In ```flytex/README.md```, you can find the basic mechanism behind.
 
 
 
