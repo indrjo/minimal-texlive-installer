@@ -1,81 +1,12 @@
 #!/usr/bin/env runghc
 
-{-
-
-  MOTIVATION
-  -------------------------------------------------------------------------
-  
-  This machinery is not complicate at all. If you have the complete scheme
-  of TeX Live, commands like
-  
-    $ your-tex-engine your-file.tex
-  
-  should conclude painlessly. The compiler will complain if it cannot find
-  a package and  will simple abort all the process.
-  
-  Maybe you know MiKTeX, who has the remarkable feature that withe same
-  commands will try to install any missing package need for the creation
-  of the final product. It is not a matter of minimalism, but out there is
-  a hell of packages: a complete installation of TeX Live takes around 4GB 
-  of memory and a lot of time to install. Although all the vivid interest
-  in this feature, TeX Live hasn't made a move in this direction yet.
-  
-  Of course, someone else has thought the same and created a small Python
-  script called "texliveonfly" to solve the problem. Unfortunately, this
-  the program hasn't been receiving any update since 2011. Although this
-  possibility, if you want TeX Live you are encouraged to make a complete
-  install, until TeX Live itself provides its own "TeX Live on the fly".
-  
-  
-  THIS PROGRAM
-  -------------------------------------------------------------------------
-  
-  The aim of this tiny program is that of the existent texliveonfly.py. If
-  you want, think of this program as a wrapper:
-  
-    $ runghc flytex.hs --c your-TeX-engine --i your-TeX-file.tex
-  
-  If you do not indicate the compiler or the file to TeX, the program will
-  complain and die. It is not mandatory to specify the options (default: no
-  options).
-  
-  The most complete syntax is:
-  
-    $ runghc flytex.hs --c TeX-engine --o TeX-options --i TeX-file.tex
-  
-  (Please always refer to ```runghc flytex.hs --help-all```, since some 
-  things may change in the future.)
-  
-  
-  HOW IT WORKS
-  -------------------------------------------------------------------------
-  
-  As we have said, this program is a wrapper of existing TeX programs, as
-  pdf[la]tex, lua[la]tex, xe[la]tex, etc... When you run any of them, you
-  are described quite in detailed way the process of creation. This program
-  just reads all this output for you: as soon as a complaint of missing 
-  package is detected, the TeX Live program tlmgr is invoked. Just make sure
-  to be connected to internet.
-  
-  
-  REQUIREMENTS
-  -------------------------------------------------------------------------
-  
-  You must have at least a mimimal scheme of TeX Live (you cannot have less
-  than this). As such, TeX Live is equipped with tlmgr.
-  
-  This program is designed having GHC as Haskell compiler. You can compile
-  this program, or you can keep it as a script and run it via runghc.
-  
--}
-
 -- As you can see from the list of imports below, there are few modules the
 -- program requires to work properly.
 --
--- !!! Write an appropriate .cabal file. !!!
--- In *.cabal specify:
---   base, process, options, regex-pcre
---
+-- !!! Write an appropriate .cabal file.
+-- !!! In *.cabal specify:
+-- !!!  base, process, options, regex-pcre
+-- !!!
 -- !!! No particular version?
 
 import Data.List (find, isPrefixOf, isSuffixOf)
