@@ -9,7 +9,7 @@ set -e -o pipefail
 # home called "texlive".
 prefix=~/texlive
 # Select the scheme to install. By default, it is "minimal".
-scheme=minimal
+scheme=scheme-minimal
 # Tell the installer location, that is the directory where to put all the 
 # stuff needed for the installation.
 installer_dir=~/.texlive-installer
@@ -30,7 +30,7 @@ while [ $# -gt 0 ]; do
       shift
     ;;
     --scheme=*)
-      scheme=${1#*=}
+      scheme=scheme-${1#*=}
       shift
     ;;
     --installer-dir=*)
@@ -51,7 +51,7 @@ while [ $# -gt 0 ]; do
     ;;
     *)
       echo ":: unknown option: $1"
-      exit 1
+      exit
     ;;
   esac
 done
@@ -88,9 +88,9 @@ if [ $verify_installer == yes ]; then
     then
       echo ":: OK"
     else
-      echo -n ":: cannot verify! continue anyway? (y/n)"
-      read -n 2 ANS
-      [ $ANS == y ] || exit 1
+      echo ":: Cannot verify!"
+      read -n 1 -p ":: continue anyway? (y/n) " ans
+      [ $ans == y ] || exit 1
   fi
 fi
 
@@ -102,9 +102,7 @@ tar -xzf install-tl-unx.tar.gz --strip-components 1
 
 echo ":: starting the installer..."
 TEXLIVE_INSTALL_PREFIX=$prefix ./install-tl \
-  --scheme scheme-$scheme --no-interaction
-
-echo ":: installation complete!"
+  --scheme $scheme --no-interaction
 
 
 ## POST-INSTALLATION PHASE ************************************************
@@ -130,5 +128,5 @@ EOF
 
 EOF
 
-echo ":: paths written!"
+echo ":: END!"
 
