@@ -150,18 +150,4 @@ Will ```texliveonfly``` return to life? Who knows. If one wants to read its sour
 
 ## Flytex
 
-In any of the languages it is written here, it is meant to do what the existing texliveonfly does. There are some points to keep in mind, though:
-
-* *flytex* is primarily designed in *Haskell*. Yet, it is maintained a *Python* version too, that should run on any GNU/Linux distro without installing alien stuff. (In future, *flytex*-es written in other languages may come.)
-
-* Any new feature will be implemented in *Haskell* first and only afterwards in other languages. By the way, I'll do my best to keep them at the same pace. See ```flytex/CHANGELOG.md``` for a history of enhancements, fixes and additions.
-
-The structure of ```flytex``` is simple. If you want the *flytex* written in the language ```LANG```, just look for ```flytex/LANG```: there you will find the program in a single file, its installer (the script ```make.sh```) and uninstaller (the script ```remove.sh```).
-
-We stick to this general rule: the installed program is called ```flytex``` and can be found in ```~/.local/bin```. Thus, make sure ```~/.local/bin``` is in your ```PATH```. The uninstaller just removes ```~/.local/bin/flytex```.
-
-The usage is the same, or almost the same:
-```
-flytex --c COMPILER [--o OPTIONS] --i FILE_TO_TEX
-```
-We will try to comply with this convention, but always have a look to ```flytex/LANG/README.md``` for quirks related to specific implementations.
+Please refer to the dedicated documentation, ```flytex/README.md```.
