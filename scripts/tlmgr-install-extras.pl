@@ -9,12 +9,22 @@
 while (my $ln = <DATA>) {
   if ($ln !~ /^\s*(#|$)/) {
     $ln =~ s/^\s+|\s+$//g;
-    #print "tlmgr install $ln\n";
     system "tlmgr install $ln";
   }
 }
 
 __DATA__
+
+# !!!
+# this is the core of packages we shall have on our machine:
+# do not remove the following packages
+# !!!
+
+latex-bin
+texdoc
+texlive-scripts-extra
+
+# !!! customize the list below, instead !!!
 
 # classes
 suftesi
@@ -29,7 +39,6 @@ hyphen-french
 hyphen-italian
 hyphen-greek
 microtype
-indentfirst
 csquotes
 hyperref
 biblatex
@@ -37,6 +46,8 @@ biber
 adjustbox
 booktabs
 imakeidx
+geometry
+enumitem
 
 # fonts
 anyfontsize
@@ -54,4 +65,4 @@ amsthm
 pgf
 tikz-cd
 commutative-diagrams
-
+tcolorbox
