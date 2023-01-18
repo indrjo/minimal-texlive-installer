@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+set -e
+
+../scripts/install-texlive-v2 --no-adjust-bashrc
+rm -rf ~/.texlive-installer 
+source ~/.tlrc
+../scripts/tlmgr-install-extras.pl
+
