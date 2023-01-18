@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # This script handles the installation of a minimal TeX Live, followed by
 # some patches, additional tlmgr packages and other fixes...

@@ -90,7 +90,7 @@ if [ $verify_installer == yes ]; then
     else
       echo ":: Cannot verify!"
       read -n 1 -p ":: continue anyway? (y/n) " ans
-      [ $ans == y ] || exit 1
+      [ $ans = y ] || exit 1
   fi
 fi
 
