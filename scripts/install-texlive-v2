@@ -1,0 +1,80 @@
+#!/usr/bin/env sh
+
+set -e -o pipefail
+
+texdir=~/texlive
+texuserdir=~/.texlive
+texmfhome=~/texmf
+scheme=scheme-minimal
+installer_dir=~/.texlive-installer
+texliverc=~/.tlrc
+adjust_bashrc=yes
+other_opts=""
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --texdir)
+      texdir=$2
+      shift; shift
+    ;;
+    --texuserdir)
+      texuserdir=$2
+      shift; shift
+    ;;
+    --texmfhome)
+      texmfhome=$2
+      shift; shift
+    ;;
+    --scheme)
+      scheme=scheme-$2
+      shift; shift
+    ;;
+    --installer-dir)
+      installer_dir=$2
+      shift; shift
+    ;;
+    --tlrc)
+      texliverc=$2
+      shift; shift
+    ;;
+    --no-adjust-bashrc)
+      adjust_bashrc=no
+      shift
+    ;;
+    *)
+      other_opts="$other_opts $1"
+      shift
+    ;;
+  esac
+done
+
+[ -d $installer_dir ] || mkdir -p $installer_dir
+cd $installer_dir
+
+wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+
+tar -xzf install-tl-unx.tar.gz --strip-components 1
+
+./install-tl \
+  --scheme     $scheme \
+  --texdir     $texdir \
+  --texuserdir $texuserdir \
+  --texmfhome  $texmfhome \
+  --no-interaction \
+  $other_opts
+
+cat <<EOF > $texliverc
+#!/bin/sh
+export PATH=$texdir/bin/x86_64-linux:\$PATH
+export MANPATH=$texdir/texmf-dist/doc/man:\$MANPATH
+export INFOPATH=$texdir/texmf-dist/doc/info:\$INFOPATH
+EOF
+
+[ $adjust_bashrc = yes ] && cat <<EOF >> ~/.bashrc
+
+# Register TeX Live paths
+[ -f $texliverc ] && source $texliverc
+EOF
+
+echo ":: END!"
+
