@@ -1,6 +1,16 @@
 
 # History of flytex
 
+## Interesting...
+
+### Put one ```/```!
+It may be more simple than I think... For example, putting a simple ```/```,
+```
+$ tlmgr search --global --file '/caption.sty' | grep -P ':\s*$' | sed 's/://'
+caption
+```
+seems to do do what we need. Considering this possibility instead...
+
 ## Issues present in all the ```flytex```-es here...
 
 ### [13 dec 2022]
