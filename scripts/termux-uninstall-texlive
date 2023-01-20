@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # TeXLive uninstaller.
 pkg uninstall texlive-installer texlive-bin

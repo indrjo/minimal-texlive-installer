@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-rm -rfv ~/texlive2
-rm -rfv ~/.texlive2
-rm -rfv ~/texmf2
-rm -rfv ~/.tlrc2
-rm -rfv ~/.texlive-installer

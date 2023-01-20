@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # This script handles the installation of a minimal TeX Live, followed by
 # some patches, additional tlmgr packages and other fixes...
@@ -25,7 +25,6 @@ echo -e "\\n:: starting the installer...\\n"
 $PREFIX/opt/texlive/install-tl/install-tl \
   --custom-bin $PREFIX/bin/texlive \
   --profile $PREFIX/opt/texlive/termux-install-minimal.profile
-  # --profile $PREFIX/opt/texlive/termux.profile
 
 echo -e "\\n:: patching the TeX Live just installed...\\n"
 $PREFIX/bin/termux-patch-texlive
