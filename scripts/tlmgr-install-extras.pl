@@ -5,11 +5,11 @@
 # Here, there is a short code, concluded by __DATA__. The list of packages
 # starts directly below __DATA__. Feel free to edit this list as per your
 # personal needs. Blank lines and lines starting by "#" are not considered.
-
 while (my $ln = <DATA>) {
   if ($ln !~ /^\s*(#|$)/) {
     $ln =~ s/^\s+|\s+$//g;
-    system "tlmgr install $ln";
+    print "\n:: installing $ln...\n";
+    system "tlmgr install @ARGV  $ln";
   }
 }
 
@@ -54,15 +54,15 @@ anyfontsize
 libertine
 sourcecodepro
 
-# mathematical fonts
+# mathematical stuff
 libertinust1math
 mathalpha
 mathtools
 mnsymbol
-amsthm
-
-# other mathematical stuff
+amscls
+amsmath
 pgf
 tikz-cd
 commutative-diagrams
 tcolorbox
+thmtools
