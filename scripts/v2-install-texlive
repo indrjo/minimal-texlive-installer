@@ -63,6 +63,9 @@ tar -xzf install-tl-unx.tar.gz --strip-components 1
   --no-interaction \
   $other_opts
 
+# EXPERIMENTAL | Remove the installer, since it isn't needed anymore.
+rm -rf $installer_dir
+
 cat <<EOF > $texliverc
 #!/bin/sh
 export PATH=$texdir/bin/x86_64-linux:\$PATH
@@ -75,6 +78,19 @@ EOF
 # Register TeX Live paths
 [ -f $texliverc ] && source $texliverc
 EOF
+
+# EXPERIMENTAL | After you have done all the work above, prepare the an
+# uninstaller for the installed TeX Live.
+cat <<EOF > ~/.texlive-uninstaller
+#!/bin/sh
+rm -rfv $texdir
+rm -rfv $texuserdir
+rm -rfv $texmfhome
+rm -rfv $texliverc
+rm -rfv ~/.texlive-uninstaller
+EOF
+
+chmod u+x ~/.texlive-uninstaller
 
 echo ":: END!"
 
