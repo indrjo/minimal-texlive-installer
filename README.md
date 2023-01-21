@@ -150,4 +150,4 @@ Will ```texliveonfly``` return to life? Who knows. If one wants to read its sour
 
 ## Flytex
 
-Please refer to the dedicated documentation, ```flytex/README.md```.
+Please refer to [this repo](https://github.com/indrjo/flytex).
