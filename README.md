@@ -8,35 +8,36 @@
 
 * [TeX Live on the fly](#tex-live-on-the-fly)
 
-* [Flytex](#flytex)
-
 
 
 ## Preamble
 
-We provide instructions to install a **minimal TeX Live** on GNU/Linux. Here, *minimal* means that you have a very small base that can be easily enriched through [texliveonfly](https://www.ctan.org/pkg/texliveonfly). This means you do not have all the packages you need, but you can easily add them.
-For example, the command
+Here we provide some instructions to install a **minimal TeX Live** on GNU/Linux. Here, *minimal* means that you have a bare core that can be easily enriched though. This can be done via a small Python script, [```texliveonfly.py```](https://www.ctan.org/pkg/texliveonfly). From now on, we will refer to this program as *texliveonfly*.
+
+Loosely speaking, *texliveonfly* is a wrapper of programs that TeX Live has or could be added to. For instance, the command
 ```
 $ texliveonfly --compiler lualatex hello-world.tex
 ```
-while trying to produce ```hello-world.pdf``` with ```lualatex``` detects missing packages and install them *on the fly*. After you have all what you need, a ordinary
+issues to the host system the command
 ```
 $ lualatex hello-world.tex
 ```
-will work. There is a [dedicated section below](#tex-live-on-the-fly) for this script: you may want to read that before.
+However, this command alone would fail and complain if some package is absent. The wrapper receives that complaint for you and tries to install the necessary *on the fly*, using the package mangaer of TeX Live, *tlmgr*.
+
+Of course, you should not use *texliveonfly* as you use your favourite TeX engine. The idea is: I know a certain TeX work needs packages I know I don't have; then, I use *texliveonfly* just once, in order to retrieve any missing package.
+
+**(Attention)** There is a [dedicated section below](#tex-live-on-the-fly) for this script: you may want to read that before.
+
+**(Attention)** In the directory ```./scripts```, there is a collection of tiny shell scripts automating various parts of the installation process explained in the sections below. If you cannot be bothered, then you may move there and read ```./scripts/README.md``` for a quick installation.
 
 
 
 ## Minimal TeX Live on GNU/Linux
 
-**(Warning)** The procedure below installs TeX Live in your own home. So, if you want TeX Live to be accessible to other users, this might not be the best choice.
-
-**(Warning)** In the directory ```scripts```, there is a collection of tiny shell scripts automating various parts of the installation process. They may be helpful, if you cannot be bothered. In this case, go to the ```README``` present there.
+This procedure installs TeX Live in your own home. So, if you want TeX Live to be accessible to other users, this might not be the best choice. The installation process does not mess your home up, as just two new directories are created: one is ```~/texlive``` and the other is ```~/.texlive``` (or some variation...). Thus, if you want to get rid of TeX Live, you know what to remove.
 
 
 ### Installation
-
-The installation process does not mess your home up, as just two new directories are created: one is ```~/texlive``` and the other is ```~/.texlive``` (or some variation...). Thus, if you want to get rid of TeX Live, you know what to remove.
 
 To keep things tidy, let us create a directory and move there:
 ```
@@ -95,31 +96,19 @@ should suffice for the purpose. (You may need to employ ```sudo```...)
 
 ## Minimal TeX Live on Android
 
-We use [Termux](https://termux.dev/en/); you may want to have a look at the [TeX Live page of Termux](https://wiki.termux.com/wiki/TeX_Live).
+We use [Termux](https://termux.dev/en/). In that case, you may want to have a look at the [TeX Live page of Termux](https://wiki.termux.com/wiki/TeX_Live), just in case drastic changes occurs.
 
-The installation on Android requires some work that is better not to explain in this ```README```. However, if one wants to know this work, they could read the source codes in ```scripts/termux``` directly.
-
-
-### Installation and post-installation
-
-Consider ```scripts/termux-install-minimal-texlive```.
-
-
-### Uninstall
-
-Have a look at ```scripts/termux-uninstall-texlive```.
+The installation on Android requires some work that we shall not explain here. In ```./scripts``` you can find one ```README.md``` that will give you more details and some scripts you can read.
 
 
 
 ## TeX Live on the fly
 
-### Description
-
-We can get it from CTAN:
+We can get it from CTAN via *tlmgr*
 ```
 $ tlmgr install texliveonfly
 ```
-It is very simple to use:
+As we have anticipated, the usage is quite simple:
 ```
 $ texliveonfly -c COMPILER YOUR_TEX_FILE
 ```
@@ -135,19 +124,17 @@ $ tlmgr install hyphen-LANGUAGE
 ```
 $ texliveonfly -c COMPILER -a '--synctex=1' FILE.tex
 ```
-(and who knows what else...) turns off the ability to install packages on the fly.
+(and who knows what else...) turns off the ability to install packages on the fly. However, who cares? Use *texliveonfly* just to get all what you need and got back to the unwrapped engines of TeX Live.
 
 
 ### Criticisms
 
-Truth be said, ```texliveonfly.py``` is a very old software, it was written in 2011 ([click!](https://latex.org/forum/viewtopic.php?f=12&t=15194)) and it hasn' been receiving updates since ages from its author(s). On internet, you can find some repositories providing some changes and fixes (for example [this](https://github.com/maphy-psd/texliveonfly) of 2015), but it definitely seems a dead project.
+Maybe you know or have tried [MiKTeX](https://www.miktex.org). Its developers has been working hard to build an ecosystem where packages are downloaded the first time they are required. *texlive* on the fly tries to emulate this feature and bring it to TeX Live.
 
-Another source of criticisms is that it was written on and for the Ubuntu of that era. If you read its source code, you will notice, some software that exists no more is invoked. Fortunately, this happens if you want to use ```sudo``` or *similia*. If we install all in ```$HOME```, no problem.
+Truth be said, the script ```texliveonfly.py``` is a very old software, it was written in 2011 ([click!](https://latex.org/forum/viewtopic.php?f=12&t=15194)). You can find some repositories providing some changes and fixes (for example [this](https://github.com/maphy-psd/texliveonfly) of 2015), but it definitely seems a dead project, since it hasn't been receiving updates anymore from its authors.
 
-Will ```texliveonfly``` return to life? Who knows. If one wants to read its source code and work on it, one hurdle could be that the code is poorly commented. If one wants to write its own *TeX Live on the fly*, this means work from zero, although the idea behind is simple. In ```flytex/README.md```, you can find the basic mechanism behind.
+Another problem is that it was written on and for the Ubuntu of that era. If you read its source code, you will notice, some old software is invoked. Fortunately, this happens if you want to use ```sudo``` or *similia*. If we install all in your home, it seems there is no problem.
 
+Will *texliveonfly* return to life? I hope so, but who knows. If one wants to read its source code and work on it, one hurdle could be that the code is poorly commented. If one wants to write its own *TeX Live on the fly*, this means work from zero, although the idea behind is simple.
 
-
-## Flytex
-
-Please refer to [this repo](https://github.com/indrjo/flytex).
+You may find useful this project that started as a part of this repo: in that case, [click](https://github.com/indrjo/flytex). Of course, it would be finer the TeX Live team provides an official installer on the fly embedded in that ecosystem.
