@@ -132,24 +132,24 @@ tlmgrMultipleInstall fp (pkg:pkgs) =
 --    pathN
 --
 -- In our example, the paths end with `caption.sty`. In this case, we are
--- looking for exactly `caption.sty` and not for, say, `ccaption.sty`. 
--- Thus part of the work is to extract from the sequence above only the
--- packages containing the given file.
-findPackages :: String -> [String] -> [String]
-findPackages fp (ln1:ln2:lns) =
-  case ln2 of
-    '\t':_ ->
-      if ('/':fp) `isSuffixOf` ln2
-        then (init ln1) : findPackages fp (dropWhile (isPrefixOf "\t") lns)
-        else findPackages fp (ln1:lns)
-    _:_ -> findPackages fp (ln2:lns)
-    _ -> undefined -- this should not happen
-findPackages _ _ = []
+-- looking for exactly `caption.sty` and not for, say, `ccaption.sty`. This
+-- problem can be easily solved putting a "/", as follows:
+--
+-- | $ tlmgr search --global --file /caption.sty
+-- | tlmgr: package repository [...]
+-- | caption:
+-- | 	 texmf-dist/tex/latex/caption/caption.sty
+--
+-- Thus part of the work is to extract from such lines only the names of 
+-- the packages containing the given file: concretely, this means to filter
+-- the lines ending with ":".
+findPackages :: [String] -> [String]
+findPackages = map init . filter (isSuffixOf ":")
 
 -- Make tlmgr look for packages containing the given file.
 tlmgrSearch :: String -> IO (Either String (Maybe [String]))
 tlmgrSearch fp =
-    flytexExec ("tlmgr search --global --file " ++ fp) "" >>=
+    flytexExec ("tlmgr search --global --file /" ++ fp) "" >>=
       \(exit_code, out_str, err_str) ->
         return $ case exit_code of
           ExitSuccess ->
@@ -159,7 +159,7 @@ tlmgrSearch fp =
             Right $ case lines out_str of
               _:out_lns' ->
                 (\xs -> if null xs then Nothing else Just xs)
-                  (findPackages fp out_lns')
+                  (findPackages out_lns')
               _ -> Nothing
           -- Otherwise, just collect all the error message, to be presented
           -- to the user in future.

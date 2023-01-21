@@ -12,7 +12,6 @@ import re
 # The general way, to say things.
 def say(hdl, who, text):
   print('[' + who + '] ' + text, file=hdl)
-  #print(f'[{who}] {text}', file=hdl)
 
 def flytex_says(text):
   say(sys.stdout, 'flytex', text)
@@ -118,29 +117,33 @@ def tlmgr_multiple_install(fp, pkgs):
 #    pathN
 #
 # In our example, the paths end with `caption.sty`. In this case, we are
-# looking for exactly `caption.sty` and not for, say, `ccaption.sty`. 
-# Thus part of the work is to extract from the sequence above only the
-# packages containing the given file. Thus part of the work is to extract 
-# from the sequence above the packages containing the given file.
-def find_packages(fp, lns):
+# looking for exactly `caption.sty` and not for, say, `ccaption.sty`. This
+# problem can be easily solved putting a "/", as follows:
+#
+# | $ tlmgr search --global --file /caption.sty
+# | tlmgr: package repository [...]
+# | caption:
+# | 	 texmf-dist/tex/latex/caption/caption.sty
+#
+# Thus part of the work is to extract from such lines only the names of 
+# the packages containing the given file: concretely, this means to filter
+# the lines ending with ":".
+def find_packages(lns):
   pkgs = []
-  pkg = lns[0][:-1]
-  for ln in lns[1:]:
-    if ln.startswith('\t'):
-      if ln.endswith('/' + fp):
-        pkgs.append(pkg)
-    else:
+  for ln in lns:
+    if ln.endswith(':'):
       pkg = ln[:-1]
+      pkgs.append(pkg)
   return pkgs
 
 # Make tlmgr look for packages containing the given file.
 def tlmgr_search(fp):
   exit_code, out_str, err_str = \
-    flytex_exec('tlmgr search --global --file ' + fp)
+    flytex_exec('tlmgr search --global --file /' + fp)
   if exit_code == 0:
     pkgs_paths = out_str.split('\n')
     if len(pkgs_paths) >= 1:
-      pkgs_found = find_packages(fp, pkgs_paths[1:])
+      pkgs_found = find_packages(pkgs_paths[1:])
       return exit_code, None if pkgs_found == [] else pkgs_found
     else:
       return exit_code, None
@@ -209,18 +212,12 @@ def find_missings(err_str):
 # system run it. If no error arises, fine; otherwise, the program tries to
 # detect missing files, looks for missing packages containing it and
 # installs them; thus, a new attempt to run the same TeXCommand is made.
-
-def find(p, xs):
-  for x in xs:
-    if p(x):
-      return x
-  return None
-
-
 def flytex(tex_cmd):
   (exit_code, out_str, _) = flytex_exec(tex_cmd)
   while exit_code != 0:
-    tex_err = find(lambda s: s.startswith('!'), out_str.split('\n'))
+    # !!! Since the exit status in this case is non zero, then it must be
+    # !!! some line starting with '!' in the output.
+    tex_err = next(ln for ln in out_str.split('\n') if ln.startswith('!')) 
     missings = find_missings(tex_err)
     if missings == []:
       flytex_says_error(tex_err)
