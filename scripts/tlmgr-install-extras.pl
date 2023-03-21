@@ -8,8 +8,7 @@
 while (my $ln = <DATA>) {
   if ($ln !~ /^\s*(#|$)/) {
     $ln =~ s/^\s+|\s+$//g;
-    print "\n:: installing $ln...\n";
-    system "tlmgr install @ARGV  $ln";
+    system "tlmgr install @ARGV $ln";
   }
 }
 
