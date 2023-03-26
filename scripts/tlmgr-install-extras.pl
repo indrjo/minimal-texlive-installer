@@ -47,6 +47,7 @@ booktabs
 imakeidx
 geometry
 enumitem
+xifthen
 
 # fonts
 anyfontsize
