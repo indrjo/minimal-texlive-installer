@@ -20,12 +20,14 @@ __DATA__
 # !!!
 
 latex-bin
+latex-base-dev
 texdoc
 texlive-scripts-extra
 
 # !!! customize the list below, instead !!!
 
 # classes
+standalone
 suftesi
 
 # base packages
@@ -66,3 +68,4 @@ tikz-cd
 commutative-diagrams
 tcolorbox
 thmtools
+
