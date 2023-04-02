@@ -147,7 +147,7 @@ $ texliveonfly -c COMPILER -a '--synctex=1' FILE.tex
 
 ### Criticisms
 
-Maybe you know or have tried [MiKTeX](https://www.miktex.org). Its developers have been working hard to build an ecosystem where packages are downloaded the first time they are required. `texliveonfly.py` tries to emulate this feature and bring it to TeX Live.
+Maybe you know or have tried [MiKTeX](https://miktex.org/). Its developers have been working hard to build an ecosystem where packages are downloaded the first time they are required. `texliveonfly.py` tries to emulate this feature and bring it to TeX Live.
 
 Truth be said, that script is a very old software, it was written in 2011 ([click!](https://latex.org/forum/viewtopic.php?f=12&t=15194)). You can find some repositories providing some changes and fixes (for example [this](https://github.com/maphy-psd/texliveonfly) of 2015), but it definitely seems a dead project, since it hasn't been receiving updates anymore from its authors.
 
