@@ -128,5 +128,16 @@ EOF
 
 EOF
 
+# EXPERIMENTAL | After you have done all the work above, prepare the an
+# uninstaller for the installed TeX Live.
+cat <<EOF > ~/.texlive-uninstaller
+#!/bin/sh
+rm -rfv $prefix
+rm -rfv ~/.texlive*
+rm -rfv ~/.texlive-uninstaller
+EOF
+
+chmod u+x ~/.texlive-uninstaller
+
 echo ":: END!"
 
