@@ -28,12 +28,16 @@ Afterwards you should also
 $ source ~/.bashrc
 ```
 
-The Perl script `./scripts/tlmgr-install-extras.pl` installs extra packages that do not come with the minimal installation. You are encouraged to read it and edit as per your needs and tastes.
+The Perl script `./scripts/tlmgr-install-extras.pl` installs extra packages. You are encouraged to read it and edit as per your needs and tastes. The Perl code is very short, just focus on all that is under `__DATA__`: there you will find a list of packages that will be installed if you run it and some comments too; in particular, you will notice that some of them are *strongly recommended*.
+
+**(Note)** Consider making `install-texlive` install those recommended packages.
+
+**(Note)** Consider migrating to `v2-install-texlive`.
 
 
 ### Uninstall TeX Live
 
-The installation script generates a uninstaller script, use it if you want to get rid of all TeX Live:
+The installation script generates a uninstaller script, so use it if you want (or have) to get rid of TeX Live:
 
 ```sh
 $ ~/.texlive-uninstaller
