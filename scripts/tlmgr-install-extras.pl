@@ -14,17 +14,19 @@ while (my $ln = <DATA>) {
 
 __DATA__
 
-# !!!
-# this is the core of packages we shall have on our machine:
-# do not remove the following packages
-# !!!
+# The minimal installation has not the following packages shipped, although
+# they are essential: latex-bin provides binaries for pdflatex, lualatex,
+# xelatex and so on...; latex-base-dev is a collection of other useful code
+# for the LaTeX ecosystem; texdoc allows you to access documentation for
+# installed packages; texlive-scripts-extra is a collection of scripts for
+# the TeX Live environment. We recommend you to install at least them.
 
 latex-bin
 latex-base-dev
 texdoc
 texlive-scripts-extra
 
-# !!! customize the list below, instead !!!
+# Modify the list below, instead.
 
 # classes
 standalone
@@ -66,6 +68,7 @@ amsmath
 pgf
 tikz-cd
 commutative-diagrams
+extarrows
 tcolorbox
 thmtools
 
