@@ -2,14 +2,19 @@
 
 set -e -o pipefail
 
-texdir=~/texlive
-texuserdir=~/.texlive
-texmfhome=~/texmf
+# DEFAULTS | These are some defaults, the names should be explicative.
+
+texdir=~/texlive       # all of your TeX Live goes here
+texuserdir=~/.texlive  # the user installation directory
+texmfhome=~/texmf      # the three for the current user
 scheme=scheme-minimal
 installer_dir=~/.texlive-installer
 texliverc=~/.tlrc
 adjust_bashrc=yes
 other_opts=""
+
+
+# PARSING COMMAND LINE OPTIONS
 
 while [ $# -gt 0 ]; do
   case $1 in
@@ -48,6 +53,9 @@ while [ $# -gt 0 ]; do
   esac
 done
 
+
+# GET READY FOR THE INSTALLATION
+
 [ -d $installer_dir ] || mkdir -p $installer_dir
 cd $installer_dir
 
@@ -55,6 +63,7 @@ wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 
 tar -xzf install-tl-unx.tar.gz --strip-components 1
 
+# INSTALLATION
 ./install-tl \
   --scheme     $scheme \
   --texdir     $texdir \
@@ -63,9 +72,7 @@ tar -xzf install-tl-unx.tar.gz --strip-components 1
   --no-interaction \
   $other_opts
 
-# EXPERIMENTAL | Remove the installer, since it isn't needed anymore.
-rm -rf $installer_dir
-
+# Write TeX Live paths in a separate file, $texliverc.
 cat <<EOF > $texliverc
 #!/bin/sh
 export PATH=$texdir/bin/x86_64-linux:\$PATH
@@ -73,16 +80,31 @@ export MANPATH=$texdir/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$texdir/texmf-dist/doc/info:\$INFOPATH
 EOF
 
+# By default, paths are incorporated into ~/.bashrc.
 [ $adjust_bashrc = yes ] && cat <<EOF >> ~/.bashrc
 
 # Register TeX Live paths
 [ -f $texliverc ] && source $texliverc
 EOF
 
-# EXPERIMENTAL | After you have done all the work above, prepare the an
-# uninstaller for the installed TeX Live.
+# Install some highly recommended packages in case the user decides to not
+# install the full scheme.
+if [ $scheme != "scheme-full" ]; then
+  source $texliverc
+  tlmgr install latex-bin
+  tlmgr install latex-base-dev
+  tlmgr install texlive-scripts
+  tlmgr install texdoc
+fi
+
+
+# POST INSTALLATION REFINEMENT
+
+# After you have done all the work above, prepare the an uninstaller for 
+# the installed TeX Live.
 cat <<EOF > ~/.texlive-uninstaller
 #!/bin/sh
+# The TeX Live uninstaller script
 rm -rfv $texdir
 rm -rfv $texuserdir
 rm -rfv $texmfhome
@@ -91,6 +113,9 @@ rm -rfv ~/.texlive-uninstaller
 EOF
 
 chmod u+x ~/.texlive-uninstaller
+
+# Remove the installer, since it isn't needed anymore.
+rm -rf $installer_dir
 
 echo ":: END!"
 
