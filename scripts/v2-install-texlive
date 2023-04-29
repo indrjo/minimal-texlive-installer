@@ -2,19 +2,23 @@
 
 set -e -o pipefail
 
-# DEFAULTS | These are some defaults, the names should be explicative.
+# DEFAULTS ****************************************************************
 
+# TeX Live installation tree details
 texdir=~/texlive       # all of your TeX Live goes here
 texuserdir=~/.texlive  # the user installation directory
 texmfhome=~/texmf      # the three for the current user
-scheme=scheme-minimal
-installer_dir=~/.texlive-installer
-texliverc=~/.tlrc
-adjust_bashrc=yes
+scheme=scheme-minimal  # the dault scheme, "minimal"
+
+# Options for this wrapper sciript only.
+installer_dir=~/.texlive-installer  # where the TeX Live installer goes
+texliverc=~/.tlrc                   # the paths for TeX Live
+adjust_bashrc=yes                   # register them on ~/.bashrc too?
+
+# Just in case you want to pass another options to install-tl...
 other_opts=""
 
-
-# PARSING COMMAND LINE OPTIONS
+# PARSING COMMAND LINE OPTIONS ********************************************
 
 while [ $# -gt 0 ]; do
   case $1 in
@@ -53,8 +57,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-
-# GET READY FOR THE INSTALLATION
+# GET READY FOR THE INSTALLATION ******************************************
 
 [ -d $installer_dir ] || mkdir -p $installer_dir
 cd $installer_dir
@@ -63,7 +66,13 @@ wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 
 tar -xzf install-tl-unx.tar.gz --strip-components 1
 
-# INSTALLATION
+# INSTALLATION ************************************************************
+
+# We can run now the installer with some changes. Apart the options handled
+# above, any other option you pass to this program will be forwarded to the
+# that program. That feature may be helpful in case you want to make other
+# changes to your installation. For that purpouse, refer to the help given
+# by the Perl script install-tl.
 ./install-tl \
   --scheme     $scheme \
   --texdir     $texdir \
@@ -72,15 +81,20 @@ tar -xzf install-tl-unx.tar.gz --strip-components 1
   --no-interaction \
   $other_opts
 
-# Write TeX Live paths in a separate file, $texliverc.
+# At this point, the binaries of TeX Live may not be visible to the current
+# user. So, care to write in a separate file where to find them.
 cat <<EOF > $texliverc
 #!/bin/sh
+
+# TeX Live paths
 export PATH=$texdir/bin/x86_64-linux:\$PATH
 export MANPATH=$texdir/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$texdir/texmf-dist/doc/info:\$INFOPATH
 EOF
 
-# By default, paths are incorporated into ~/.bashrc.
+# Of course, that file to be taken into account. Appending one line to your
+# ~/.bashrc should be enough. That step is performed by default, hence you
+# have to prevent that form happening.
 [ $adjust_bashrc = yes ] && cat <<EOF >> ~/.bashrc
 
 # Register TeX Live paths
@@ -88,7 +102,8 @@ EOF
 EOF
 
 # Install some highly recommended packages in case the user decides to not
-# install the full scheme.
+# install the full scheme. This step is quite important: so far, you have
+# only a bare skeleton, you cannot even do the most basic stuff.
 if [ $scheme != "scheme-full" ]; then
   source $texliverc
   tlmgr install latex-bin
@@ -97,13 +112,16 @@ if [ $scheme != "scheme-full" ]; then
   tlmgr install texdoc
 fi
 
-
-# POST INSTALLATION REFINEMENT
+# POST INSTALLATION REFINEMENT ********************************************
 
 # After you have done all the work above, prepare the an uninstaller for 
-# the installed TeX Live.
+# the installed TeX Live. As you know, you have to annually get rid of TeX
+# Live in order to install the newer version. Removing TeX Live should not 
+# be difficult (is you remember where you have installed all the stuff), 
+# but pay attention to not remove the uninstaller.
 cat <<EOF > ~/.texlive-uninstaller
 #!/bin/sh
+
 # The TeX Live uninstaller script
 rm -rfv $texdir
 rm -rfv $texuserdir
@@ -112,10 +130,14 @@ rm -rfv $texliverc
 rm -rfv ~/.texlive-uninstaller
 EOF
 
+# The uninstaller is made executable by the the current user. Perhaps, it
+# shouldn't be like that...
 chmod u+x ~/.texlive-uninstaller
 
-# Remove the installer, since it isn't needed anymore.
+# Remove the installer. What if one wanted to keep the installer? 
 rm -rf $installer_dir
+
+# END *********************************************************************
 
 echo ":: END!"
 
