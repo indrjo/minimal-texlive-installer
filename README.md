@@ -8,7 +8,6 @@
 * [Adding packages to your minimal TeX Live](#adding-packages-to-your-minimal-tex-live)
 
 
-
 ## Minimal TeX Live on GNU/Linux
 
 **(Important)** This procedure installs TeX Live in your own home. So, if you want TeX Live to be accessible to other users, this might not be the best choice.
@@ -16,23 +15,43 @@
 
 ### Installation
 
-The installation process is thoroughly handled by one of the scripts provided here:
+The installation process is thoroughly handled by one of the script `install-texlive`. Just run it as follows:
 
 ```sh
 $ ./scripts/install-texlive
 ```
 
-Afterwards you should also
+**(Note)** Consider migrating to `v2-install-texlive`. However, there are some relevant differences about the directories of TeX Live.
+
+**(Note)** We list here the defaults and how to change them.
+
+* By default `~/.texlive-installer` is the location where the installer is downloaded and unpacked. If you want to specify another place, you can use `--installer-dir=HERE`. **(Attention)** Just be sure you have the permission to write into `HERE`.
+
+* As `install-tl-unx.tar.gz` is downloaded in its directory, you can make `install-texlive` check its integrity for you. Just pass the option `--verify-installer` to do so, because this step is skipped by default.
+
+* The environment variable `TEXLIVE_INSTALL_PREFIX` (the directory where all of TeX Live is allocated) is set to `~/texlive` by default. If you prefer another location, pass the option `--prefix=HERE`. **(Attention)** Just make sure you have the right to write where you want.
+
+* You can select the scheme to install, by passing `--scheme=SCHEME`. Here, `SCHEME` could be for example: `minimal` (the default), `basic`, `small`, `medium`, `full`, etc...
+
+* At the end of the installation an appropriate file that adds to your paths the ones of TeX Live is created. By default, the file is `~/.tlrc`, but you can choose any path you prefer, using `--tlrc=HERE`. Afterwards, you must write on `~/.bashrc` to source this file. It is done for you by default; to prevent that, just pass the option `--no-adjust-bashrc`.
+
+Normally, the installation takes a couple of minutes. Afterwards, you should also
 
 ```sh
 $ source ~/.bashrc
 ```
 
-The Perl script `./scripts/tlmgr-install-extras.pl` installs extra packages. You are encouraged to read it and edit as per your needs and tastes. The Perl code is very short, just focus on all that is under `__DATA__`: there you will find a list of packages that will be installed if you run it and some comments too; in particular, you will notice that some of them are *strongly recommended*.
+or simply close and open your terminal.
 
-**(Note)** Consider making `install-texlive` install those recommended packages.
+The Perl script `./scripts/tlmgr-install-extras.pl` installs extra packages. It is not run by the installer, so you it is up to you.
 
-**(Note)** Consider migrating to `v2-install-texlive`.
+```sh
+$ ./scripts/tlmgr-install-extras.pl
+```
+
+You are encouraged to read and edit the lines below `__DATA__`: there, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
+
+**(Note)** The script `v2-install-texlive` installs those packages once the TeX Live installer has finished.
 
 
 ### Uninstall TeX Live
@@ -52,22 +71,30 @@ We use [Termux](https://termux.dev/en/). In that case, you may want to have a lo
 
 ### Install
 
-It is enough to fire:
+It is sufficient to issue the command
 
 ```sh
-$ ./scripts/termux-install-minimal-texlive
+$ ./termux-install-minimal-texlive
 ```
+
+from Termux. It manages both installation and post installation process and applies some patches to make it work within the Termux environment.
+
+**(Important)** The script `install` here is a modification of `installer.sh`, which can be found [here](https://github.com/termux/termux-packages/blob/master/packages/texlive-installer). This piece of code is distributed under the [same licence](https://github.com/termux/termux-packages/blob/master/LICENSE.md) of that work.
+
+**(Note)** Currently, this installer doesn't allow users to customize the installation, as you can for any other GNU/Linux.
 
 You can use `./scripts/tlmgr-install-extras.pl` in this context too.
 
 
 ### Uninstall
 
-There is a script dedicated for that too:
+The script `termux-uninstall-texlive` removes TeX Live and all its related stuff. You may further clean your environment using
 
 ```sh
-$ ./scripts/termux-uninstall-texlive
+$ apt autoremove
 ```
+
+For this, you need to install `apt` in your Termux (`$ pkg install apt`).
 
 
 
