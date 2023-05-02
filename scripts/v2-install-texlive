@@ -130,8 +130,8 @@ rm -rfv $texliverc
 rm -rfv ~/.texlive-uninstaller
 EOF
 
-# The uninstaller is made executable by the the current user. Perhaps, it
-# shouldn't be like that...
+# The uninstaller is made executable for the current user. Maybe, it should
+# not be like that.
 chmod u+x ~/.texlive-uninstaller
 
 # Remove the installer. What if one wanted to keep the installer? 
