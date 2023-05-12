@@ -10,18 +10,18 @@
 
 ## Minimal TeX Live on GNU/Linux
 
-**(Important)** This procedure installs TeX Live in your own home. So, if you want TeX Live to be accessible to other users, this might not be the best choice.
+The procedure explained here installs TeX Live in your `$HOME`. Thus if you want TeX Live to be accessible to other users, this might not be the best choice for you.
+
+Moreover, it is strongly recommended to read the section [Adding packages to your minimal TeX Live](#adding-packages-to-your-minimal-tex-live) and decide if it is worth.
 
 
 ### Installation
 
-The installation process is thoroughly handled by one of the script `install-texlive`. Just run it as follows:
+The installation process is thoroughly handled by one of the scripts, `install-texlive`. Running it without any command line parameter is enough:
 
 ```sh
 $ ./scripts/install-texlive
 ```
-
-**(Note)** Consider migrating to `v2-install-texlive`. However, there are some relevant differences about the directories of TeX Live.
 
 **(Note)** We list here the defaults and how to change them.
 
@@ -41,22 +41,14 @@ Normally, the installation takes a couple of minutes. Afterwards, you should als
 $ source ~/.bashrc
 ```
 
-or simply close and open your terminal.
+or simply close and re-open your terminal.
 
-The Perl script `./scripts/tlmgr-install-extras.pl` installs extra packages. It is not run by the installer, so you it is up to you.
-
-```sh
-$ ./scripts/tlmgr-install-extras.pl
-```
-
-You are encouraged to read and edit the lines below `__DATA__`: there, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
-
-**(Note)** The script `v2-install-texlive` installs those packages once the TeX Live installer has finished.
+The Perl script `./scripts/tlmgr-install-extras.pl` installs extra packages. It is not run by the installer, so you it is up to you. You are encouraged to read and edit the lines below `__DATA__`: there, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
 
 
 ### Uninstall TeX Live
 
-The installation script generates a uninstaller script, so use it if you want (or have) to get rid of TeX Live:
+The installation script generates an appropriate uninstaller, so use it if you want to (or must) get rid of TeX Live:
 
 ```sh
 $ ~/.texlive-uninstaller
@@ -66,29 +58,29 @@ $ ~/.texlive-uninstaller
 
 ## Minimal TeX Live on Android
 
-We use [Termux](https://termux.dev/en/). In that case, you may want to have a look at the [TeX Live page of Termux](https://wiki.termux.com/wiki/TeX_Live), just in case drastic changes occurs.
+We need [Termux](https://termux.dev/en/): to be precise, TeX Live will be installed within that environment. You may want to have a look at the [TeX Live page of Termux](https://wiki.termux.com/wiki/TeX_Live), just in case drastic changes occurs and this repo is not updated.
 
 
 ### Install
 
-It is sufficient to issue the command
+Open Termux and issue the command
 
 ```sh
-$ ./termux-install-minimal-texlive
+$ ./scripts/termux-install-minimal-texlive
 ```
 
-from Termux. It manages both installation and post installation process and applies some patches to make it work within the Termux environment.
+The script manages both installation, post installation process and applies some patches to make it work within the Termux environment.
 
-**(Important)** The script `install` here is a modification of `installer.sh`, which can be found [here](https://github.com/termux/termux-packages/blob/master/packages/texlive-installer). This piece of code is distributed under the [same licence](https://github.com/termux/termux-packages/blob/master/LICENSE.md) of that work.
+**(Important)** `termux-install-minimal-texlive` is a modification of `installer.sh` which can be found [here](https://github.com/termux/termux-packages/blob/master/packages/texlive-installer). This piece of code is distributed under the [same licence](https://github.com/termux/termux-packages/blob/master/LICENSE.md) of that work.
 
 **(Note)** Currently, this installer doesn't allow users to customize the installation, as you can for any other GNU/Linux.
 
-You can use `./scripts/tlmgr-install-extras.pl` in this context too.
+You can use `./scripts/tlmgr-install-extras.pl` in this context as well.
 
 
 ### Uninstall
 
-The script `termux-uninstall-texlive` removes TeX Live and all its related stuff. You may further clean your environment using
+`./scripts/termux-uninstall-texlive` removes TeX Live and all the related stuff. You may further clean your environment using
 
 ```sh
 $ apt autoremove
@@ -100,24 +92,24 @@ For this, you need to install `apt` in your Termux (`$ pkg install apt`).
 
 ## Adding packages to your minimal TeX Live
 
-As we have said, we have installed a *minimal* TeX Live, thus you are supposed to install even the most basic packages.
+As we have said, we have installed a *minimal* TeX Live, thus you are supposed to install even the most basic packages. Below are some recommendations.
 
 
-### Manually
+### Install manually
 
-We use *tlmgr* to install packages:
+We use *tlmgr* to install packages for TeX Live:
 
 ```sh
 $ tlmgr install PACKAGE_NAME
 ```
 
-Assume you run:
+Now, assume you run:
 
 ```sh
 $ pdflatex main.tex
 ```
 
-If the TeX engine complains it cannot find some file, that is says you
+If the TeX engine complains it cannot find some file:
 
 ```
 ! LaTeX Error: File `FILENAME' not found.
@@ -129,23 +121,57 @@ then you can get the name of the package containing it with *tlmgr*:
 $ tlmgr search --global --file /FILENAME
 ```
 
-which will give you a list of packages containing it. The `/` is important.
+which will give you a list of packages containing it.
 
-It may be useful to create a function that searches packages for a given filename and installs them for you: open ```~/.bashrc``` and copy the following lines
+**(Attention)** The `/` is important, make sure you type it.
+
+It may be useful to create a function that searches packages for a given filename and installs them for you: open `~/.bashrc` and copy the following lines
 
 ```sh
-# install TeX Live packages
-tlmgr-install () {
-  tlmgr search --global --file "/$1" | \
-  grep -P ':\s*$' | sed 's/\s*:$//' | \
-  xargs tlmgr install
+# Install every TeX Live packages containing a given filename.
+tlmgr-install-missing () {
+  tlmgr search --global --file /$1 | \
+    perl -lne 'm!^\s*([^:]+):$! && system "tlmgr install $1"'
 }
+```
+
+Thus, from now on you could just:
+
+```sh
+$ tlmgr-install-missing FILENAME
+```
+
+**(Attention)** It is not required `/` anymore.
+
+However, when your minimal TeX Live is fresh or you know there is long list of packages you do not have, it may be useful to act differently. Suppose we are within your project and you have a file, say `preamble.tex`, where you have written lines of the form `\usepackage{PACKAGE}`. Then the command:
+
+```sh
+$ perl -lne 'm!^\s*\\usepackage[^\{]*\{([^\}]+)\}! && system "tlmgr install $1"' preamble.tex
+```
+
+will install all the packages required (if a package is already installed, it is skipped). You may open `~/.bashrc` and write a shortcut:
+
+```sh
+# Install every packages required in TeX project: the function here takes the
+# file of the \usepackage's as argument, grabs all the names of the packages
+# required and installs them.
+tlmgr-install-required () {
+  perl -lne 'm!^\s*\\usepackage[^\{]*\{([^\}]+)\}! && print "tlmgr install $1"' $1
+}
+```
+
+to be used as follows:
+
+```sh
+$ tlmgr-install-required preamble.tex
 ```
 
 
 ### TeX Live on the fly
 
-We can get it from CTAN via *tlmgr*:
+The methods above should not present unpleasant surprise, but the user has the right to not be bothered. There is a tool that while producing your document installs any missing package required during that process.
+
+Its name is *texliveonfly*, and we can get it from CTAN via *tlmgr*:
 
 ```sh
 $ tlmgr install texliveonfly
@@ -154,26 +180,18 @@ $ tlmgr install texliveonfly
 The usage is quite simple:
 
 ```sh
-$ texliveonfly -c COMPILER YOUR_TEX_FILE
+$ texliveonfly -c TEXENGINE YOUR_TEX_FILE
 ```
 
-Here `COMPILER` can be, for instance, `pdf[la]tex`, `lua[la]tex, `xe[la]tex` or others...
+Here `TEXENGINE` can be, for instance, `pdflatex`, `lualatex`, `xelatex` or others... You may drop the part `-c TEXENGINE` if you work with `pdflatex`.
 
-**(Warning)** Although it is a great tool, in few cases it may need some help from the user. For example, you may want to install by yourself some packages after `polyglossia` or `babel`.
+**(Warning)** You may have looked at `$ flytexonfly --help` and played with it. If so, it is worth to note that
 
 ```sh
-$ tlmgr install hyphen-LANGUAGE
+$ texliveonfly -c TEXENGINE -a '--synctex=1' FILE.tex
 ```
 
-(Some of the hyphen packages are: `hyphen-english`, `hyphen-french`, `hyphen-german`, `hyphen-italian` and so on...)
-
-**(Warning)** It seems that
-
-```sh
-$ texliveonfly -c COMPILER -a '--synctex=1' FILE.tex
-```
-
-(and who knows what else...) turns off the ability to install packages on the fly. However, who cares? Use *texliveonfly* just to get all what you need and got back to the unwrapped engines of TeX Live.
+(and who knows what else...) turns off the ability to install packages on the fly. By the way, who cares? Use *texliveonfly* just to get all what you need and got back to the genuines engines of TeX Live.
 
 
 ### Criticisms
