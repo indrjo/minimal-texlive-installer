@@ -13,9 +13,9 @@ scheme=scheme-minimal  # the dault scheme, "minimal"
 # Options for this wrapper sciript only.
 installer_dir=~/.texlive-installer  # where the TeX Live installer goes
 texliverc=~/.tlrc                   # the paths for TeX Live
-adjust_bashrc=yes                   # register them on ~/.bashrc too?
+#adjust_bashrc=yes                   # register them on ~/.bashrc too?
 
-# Just in case you want to pass another options to install-tl...
+# Just in case you want to pass other options to install-tl...
 other_opts=""
 
 # PARSING COMMAND LINE OPTIONS ********************************************
@@ -46,10 +46,10 @@ while [ $# -gt 0 ]; do
       texliverc=$2
       shift; shift
     ;;
-    --no-adjust-bashrc)
-      adjust_bashrc=no
-      shift
-    ;;
+#    --no-adjust-bashrc)
+#      adjust_bashrc=no
+#      shift
+#    ;;
     *)
       other_opts="$other_opts $1"
       shift
@@ -59,20 +59,22 @@ done
 
 # GET READY FOR THE INSTALLATION ******************************************
 
+# Create, if needed, a directory and download there the TeX Live installer.
+# !!! This directory will eventually be deleted. This behaviour will likely
+# !!! change in future, for it is not unreasonable to keep the installer.
+
 [ -d $installer_dir ] || mkdir -p $installer_dir
 cd $installer_dir
 
-wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+wget "https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz"
 
 tar -xzf install-tl-unx.tar.gz --strip-components 1
 
 # INSTALLATION ************************************************************
 
-# We can run now the installer with some changes. Apart the options handled
-# above, any other option you pass to this program will be forwarded to the
-# that program. That feature may be helpful in case you want to make other
-# changes to your installation. For that purpouse, refer to the help given
-# by the Perl script install-tl.
+# Start the installer with some changes and append certain directories of
+# TeX Live to some `PATH`s.
+
 ./install-tl \
   --scheme     $scheme \
   --texdir     $texdir \
@@ -81,24 +83,12 @@ tar -xzf install-tl-unx.tar.gz --strip-components 1
   --no-interaction \
   $other_opts
 
-# At this point, the binaries of TeX Live may not be visible to the current
-# user. So, care to write in a separate file where to find them.
 cat <<EOF > $texliverc
 #!/bin/sh
-
-# TeX Live paths
+# TeX Live paths.
 export PATH=$texdir/bin/x86_64-linux:\$PATH
 export MANPATH=$texdir/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$texdir/texmf-dist/doc/info:\$INFOPATH
-EOF
-
-# Of course, that file to be taken into account. Appending one line to your
-# ~/.bashrc should be enough. That step is performed by default, hence you
-# have to prevent that form happening.
-[ $adjust_bashrc = yes ] && cat <<EOF >> ~/.bashrc
-
-# Register TeX Live paths
-[ -f $texliverc ] && source $texliverc
 EOF
 
 # Install some highly recommended packages in case the user decides to not
@@ -121,7 +111,6 @@ fi
 # but pay attention to not remove the uninstaller.
 cat <<EOF > ~/.texlive-uninstaller
 #!/bin/sh
-
 # The TeX Live uninstaller script
 rm -rfv $texdir
 rm -rfv $texuserdir
@@ -130,14 +119,28 @@ rm -rfv $texliverc
 rm -rfv ~/.texlive-uninstaller
 EOF
 
-# The uninstaller is made executable for the current user. Maybe, it should
-# not be like that.
 chmod u+x ~/.texlive-uninstaller
-
-# Remove the installer. What if one wanted to keep the installer? 
-rm -rf $installer_dir
 
 # END *********************************************************************
 
-echo ":: END!"
+cat <<EOF
+
+!!! ABOUT YOUR INSTALLATION
+
+1. Copy the line
+
+   [ -f $texliverc ] && source $texliverc
+
+   at the bottom of your ~/.bashrc, if you haven't done so.
+
+2. The installer in $installer_dir. That directoy isn't needed
+   anymore, thus you can delete it.
+
+3. In ./scripts there is tlmgr-install-extras.pl which installs
+   extra packages. If you have selected the full scheme, you do
+   not have to worry about this point.
+
+4. To uninstall TeX Live, use the script ~/.texlive-uninstaller
+
+EOF
 
