@@ -1,4 +1,4 @@
-# Get yourself a *minimal TeX Live*
+# Get yourself a *minimal* TeX Live
 
 
 * [Minimal TeX Live on GNU/Linux](#minimal-tex-live-on-gnulinux)
@@ -6,6 +6,7 @@
 * [Minimal TeX Live on Android](#minimal-tex-live-on-android)
 
 * [Adding packages to your minimal TeX Live](#adding-packages-to-your-minimal-tex-live)
+
 
 
 ## Minimal TeX Live on GNU/Linux
@@ -25,11 +26,9 @@ $ ./scripts/install-texlive
 
 **(Note)** We list here the defaults and how to change them.
 
-* By default `~/.texlive-installer` is the location where the installer is downloaded and unpacked. If you want to specify another place, you can use `--installer-dir=HERE`. **(Attention)** Just be sure you have the permission to write into `HERE`.
+* By default `~/.texlive-installer` is the location where the installer is downloaded and unpacked. If you want to specify another place, you can use `--installer-dir=HERE`.
 
-* As `install-tl-unx.tar.gz` is downloaded in its directory, you can make `install-texlive` check its integrity for you. Just pass the option `--verify-installer` to do so, because this step is skipped by default.
-
-* The environment variable `TEXLIVE_INSTALL_PREFIX` (the directory where all of TeX Live is allocated) is set to `~/texlive` by default. If you prefer another location, pass the option `--prefix=HERE`. **(Attention)** Just make sure you have the right to write where you want.
+* The directory where all of TeX Live is allocated is set to `~/texlive` by default. If you prefer another location, pass the option `--texdir=HERE`.
 
 * You can select the scheme to install, by passing `--scheme=SCHEME`. Here, `SCHEME` could be for example: `minimal` (the default), `basic`, `small`, `medium`, `full`, etc...
 
@@ -71,7 +70,7 @@ $ ./scripts/termux-install-minimal-texlive
 
 The script manages both installation, post installation process and applies some patches to make it work within the Termux environment.
 
-**(Important)** `termux-install-minimal-texlive` is a modification of `installer.sh` which can be found [here](https://github.com/termux/termux-packages/blob/master/packages/texlive-installer). This piece of code is distributed under the [same licence](https://github.com/termux/termux-packages/blob/master/LICENSE.md) of that work.
+**(Important)** The script is a modification of `installer.sh` which can be found [here](https://github.com/termux/termux-packages/blob/master/packages/texlive-installer). This piece of code is distributed under the [same licence](https://github.com/termux/termux-packages/blob/master/LICENSE.md) of that work.
 
 **(Note)** Currently, this installer doesn't allow users to customize the installation, as you can for any other GNU/Linux.
 
@@ -86,7 +85,7 @@ You can use `./scripts/tlmgr-install-extras.pl` in this context as well.
 $ apt autoremove
 ```
 
-For this, you need to install `apt` in your Termux (`$ pkg install apt`).
+For this, you need to install `apt` in your Termux (run `pkg install apt`).
 
 
 
@@ -128,43 +127,28 @@ which will give you a list of packages containing it.
 It may be useful to create a function that searches packages for a given filename and installs them for you: open `~/.bashrc` and copy the following lines
 
 ```sh
-# Install every TeX Live packages containing a given filename.
-tlmgr-install-missing () {
-  tlmgr search --global --file /$1 | \
-    perl -lne 'm!^\s*([^:]+):$! && system "tlmgr install $1"'
+# This function accepts a filename, the one of the warning
+#
+#  ! LaTeX Error: File `FILENAME' not found.
+#
+# Interrogate CTAN for packages containing that file.
+tlmgr-search () {
+  tlmgr search --global --file "/$1" | grep -P ':$' | tr -d ':'
+}
+
+# Install ALL the packages listed by `tlmgr-search-packages`.
+tlmgr-search-install () {
+  tlmgr-search "$1" | xargs tlmgr install
 }
 ```
 
 Thus, from now on you could just:
 
 ```sh
-$ tlmgr-install-missing FILENAME
+$ tlmgr-search-install FILENAME
 ```
 
 **(Attention)** It is not required `/` anymore.
-
-However, when your minimal TeX Live is fresh or you know there is long list of packages you do not have, it may be useful to act differently. Suppose we are within your project and you have a file, say `preamble.tex`, where you have written lines of the form `\usepackage{PACKAGE}`. Then the command:
-
-```sh
-$ perl -lne 'm!^\s*\\usepackage[^\{]*\{([^\}]+)\}! && system "tlmgr install $1"' preamble.tex
-```
-
-will install all the packages required (if a package is already installed, it is skipped). You may open `~/.bashrc` and write a shortcut:
-
-```sh
-# Install every packages required in TeX project: the function here takes the
-# file of the \usepackage's as argument, grabs all the names of the packages
-# required and installs them.
-tlmgr-install-required () {
-  perl -lne 'm!^\s*\\usepackage[^\{]*\{([^\}]+)\}! && print "tlmgr install $1"' $1
-}
-```
-
-to be used as follows:
-
-```sh
-$ tlmgr-install-required preamble.tex
-```
 
 
 ### TeX Live on the fly
@@ -185,7 +169,7 @@ $ texliveonfly -c TEXENGINE YOUR_TEX_FILE
 
 Here `TEXENGINE` can be, for instance, `pdflatex`, `lualatex`, `xelatex` or others... You may drop the part `-c TEXENGINE` if you work with `pdflatex`.
 
-**(Warning)** You may have looked at `$ flytexonfly --help` and played with it. If so, it is worth to note that
+**(Warning)** You may have looked at `flytexonfly --help` and played with it. If so, it is worth to note that
 
 ```sh
 $ texliveonfly -c TEXENGINE -a '--synctex=1' FILE.tex
