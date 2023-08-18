@@ -32,7 +32,7 @@ $ ./scripts/install-texlive
 
 * You can select the scheme to install, by passing `--scheme=SCHEME`. Here, `SCHEME` could be for example: `minimal` (the default), `basic`, `small`, `medium`, `full`, etc...
 
-* At the end of the installation an appropriate file that adds to your paths the ones of TeX Live is created. By default, the file is `~/.tlrc`, but you can choose any path you prefer, using `--tlrc=HERE`. Afterwards, you must write on `~/.bashrc` to source this file. It is done for you by default; to prevent that, just pass the option `--no-adjust-bashrc`.
+* At the end of the installation an appropriate file that adds to your paths the ones of TeX Live is created. By default, the file is `~/.tlrc`, but you can choose any path you prefer, using `--tlrc=HERE`.
 
 Normally, the installation takes a couple of minutes. Afterwards, you should also
 
