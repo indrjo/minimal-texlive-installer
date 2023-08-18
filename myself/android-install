@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-../scripts/termux-install-minimal-texlive
-../scripts/tlmgr-install-extras.pl
-
