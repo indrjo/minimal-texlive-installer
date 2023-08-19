@@ -42,7 +42,7 @@ $ source ~/.bashrc
 
 or simply close and re-open your terminal.
 
-The Perl script `./scripts/tlmgr-install-extras.pl` installs extra packages. It is not run by the installer, so you it is up to you. You are encouraged to read and edit the lines below `__DATA__`: there, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
+Another script, namely `./scripts/tlmgr-install-extras`, installs extra packages. It is not run by the installer, so you it is up to you. There, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
 
 
 ### Uninstall TeX Live
@@ -74,7 +74,7 @@ The script manages both installation, post installation process and applies some
 
 **(Note)** Currently, this installer doesn't allow users to customize the installation, as you can for any other GNU/Linux.
 
-You can use `./scripts/tlmgr-install-extras.pl` in this context as well.
+You can use `./scripts/tlmgr-install-extras` in this context as well.
 
 
 ### Uninstall
@@ -142,7 +142,7 @@ tlmgr-search-install () {
 }
 ```
 
-Thus, from now on you could just:
+This provides you two new functions you can use once you have sourced `~/.bashrc`, even though you will likely use only the latter:
 
 ```sh
 $ tlmgr-search-install FILENAME
