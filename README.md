@@ -21,7 +21,7 @@ Moreover, it is strongly recommended to read the section [Adding packages to you
 The installation process is thoroughly handled by one of the scripts, `install-texlive`. Running it without any command line parameter is enough:
 
 ```sh
-$ ./scripts/install-texlive
+$ install-texlive
 ```
 
 **(Note)** We list here the defaults and how to change them.
@@ -42,7 +42,7 @@ $ source ~/.bashrc
 
 or simply close and re-open your terminal.
 
-Another script, namely `./scripts/tlmgr-install-extras`, installs extra packages. It is not run by the installer, so you it is up to you. There, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
+Another script, namely `tlmgr-install-extras`, installs extra packages. It is not run by the installer, so you it is up to you. There, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
 
 
 ### Uninstall TeX Live
@@ -65,7 +65,7 @@ We need [Termux](https://termux.dev/en/): to be precise, TeX Live will be instal
 Open Termux and issue the command
 
 ```sh
-$ ./scripts/termux-install-minimal-texlive
+$ termux-install-minimal-texlive
 ```
 
 The script manages both installation, post installation process and applies some patches to make it work within the Termux environment.
@@ -74,12 +74,12 @@ The script manages both installation, post installation process and applies some
 
 **(Note)** Currently, this installer doesn't allow users to customize the installation, as you can for any other GNU/Linux.
 
-You can use `./scripts/tlmgr-install-extras` in this context as well.
+You can use `tlmgr-install-extras` in this context as well.
 
 
 ### Uninstall
 
-`./scripts/termux-uninstall-texlive` removes TeX Live and all the related stuff. You may further clean your environment using
+`termux-uninstall-texlive` removes TeX Live and all the related stuff. You may further clean your environment using
 
 ```sh
 $ apt autoremove

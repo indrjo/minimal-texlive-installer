@@ -23,33 +23,29 @@ other_opts=""
 while [ $# -gt 0 ]; do
   case $1 in
     --texdir)
-      texdir=$2
+      texdir="$2"
       shift; shift
     ;;
     --texuserdir)
-      texuserdir=$2
+      texuserdir="$2"
       shift; shift
     ;;
     --texmfhome)
-      texmfhome=$2
+      texmfhome="$2"
       shift; shift
     ;;
     --scheme)
-      scheme=scheme-$2
+      scheme="scheme-$2"
       shift; shift
     ;;
     --installer-dir)
-      installer_dir=$2
+      installer_dir="$2"
       shift; shift
     ;;
     --tlrc)
-      texliverc=$2
+      texliverc="$2"
       shift; shift
     ;;
-#    --no-adjust-bashrc)
-#      adjust_bashrc=no
-#      shift
-#    ;;
     *)
       other_opts="$other_opts $1"
       shift
@@ -109,6 +105,7 @@ fi
 # Live in order to install the newer version. Removing TeX Live should not 
 # be difficult (is you remember where you have installed all the stuff), 
 # but pay attention to not remove the uninstaller.
+
 cat <<EOF > ~/.texlive-uninstaller
 #!/bin/sh
 # The TeX Live uninstaller script
