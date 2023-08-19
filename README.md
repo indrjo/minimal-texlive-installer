@@ -65,7 +65,7 @@ We need [Termux](https://termux.dev/en/): to be precise, TeX Live will be instal
 Open Termux and issue the command
 
 ```sh
-$ termux-install-minimal-texlive
+$ termux-install-texlive
 ```
 
 The script manages both installation, post installation process and applies some patches to make it work within the Termux environment.
