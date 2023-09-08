@@ -26,13 +26,11 @@ $ install-texlive
 
 **(Note)** We list here the defaults and how to change them.
 
-* By default `~/.texlive-installer` is the location where the installer is downloaded and unpacked. If you want to specify another place, you can use `--installer-dir=HERE`.
+* The directory where all of TeX Live is allocated is set to `~/texlive` by default. If you prefer another location, pass the option `--texdir HERE`.
 
-* The directory where all of TeX Live is allocated is set to `~/texlive` by default. If you prefer another location, pass the option `--texdir=HERE`.
+* You can select the scheme to install, by passing `--scheme SCHEME`. Here, `SCHEME` could be for example: `minimal` (the default), `basic`, `small`, `medium`, `full`, etc...
 
-* You can select the scheme to install, by passing `--scheme=SCHEME`. Here, `SCHEME` could be for example: `minimal` (the default), `basic`, `small`, `medium`, `full`, etc...
-
-* At the end of the installation an appropriate file that adds to your paths the ones of TeX Live is created. By default, the file is `~/.tlrc`, but you can choose any path you prefer, using `--tlrc=HERE`.
+* At the end of the installation an appropriate file that adds to your paths the ones of TeX Live is created. By default, the file is `~/.tlrc`, but you can choose any path you prefer, using `--tlrc HERE`.
 
 Normally, the installation takes a couple of minutes. Afterwards, you should also
 
