@@ -28,7 +28,7 @@ the cases.
 
 EOF
 
-read -p "If you wan to continue hit Enter otherwise Ctrl-C" -n 1
+read -p "If you want to continue hit Enter otherwise Ctrl-C" -n 1
 
 # DETERMINE THE DETAILS FO THE INSTALLATION *******************************
 
