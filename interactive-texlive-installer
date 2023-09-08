@@ -28,8 +28,7 @@ the cases.
 
 EOF
 
-#go=$(get_answer "ready to go? y/n" "y") 
-#[ $go = y ] || exit
+read -p "If you wan to continue hit Enter otherwise Ctrl-C" -n 1
 
 # DETERMINE THE DETAILS FO THE INSTALLATION *******************************
 
@@ -96,25 +95,10 @@ export MANPATH=$texdir/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$texdir/texmf-dist/doc/info:\$INFOPATH
 EOF
 
-# Install some highly recommended packages in case the user decides to not
-# install the full scheme. This step is quite important: so far, you have
-# only a bare skeleton, you cannot even do the most basic stuff.
-if [ $scheme != "scheme-full" ]; then
-  source $tlrc
-  tlmgr install latex-bin
-  tlmgr install latex-base-dev
-  tlmgr install texlive-scripts
-  tlmgr install texdoc
-fi
-
-# POST INSTALLATION REFINEMENT ********************************************
-
 # After you have done all the work above, prepare the an uninstaller for 
 # the installed TeX Live. As you know, you have to annually get rid of TeX
 # Live in order to install the newer version. Removing TeX Live should not 
-# be difficult (is you remember where you have installed all the stuff), 
-# but pay attention to not remove the uninstaller.
-
+# be difficult, but pay attention to not remove the uninstaller.
 cat <<EOF > ~/.texlive-uninstaller
 #!/bin/sh
 # The TeX Live uninstaller script
@@ -125,6 +109,19 @@ rm -rfv $HOME/.texlive-uninstaller
 EOF
 
 chmod u+x ~/.texlive-uninstaller
+
+# REFINEMENTS *************************************************************
+
+# Install some highly recommended packages in case the user decides to not
+# install the full scheme. This step is quite important: so far, you have
+# only a bare skeleton, you cannot even do the most basic stuff.
+if [ $scheme != "scheme-full" ]; then
+  source $tlrc
+  tlmgr install latex-bin
+  tlmgr install latex-base-dev
+  tlmgr install texlive-scripts
+  tlmgr install texdoc
+fi
 
 # END *********************************************************************
 
@@ -141,9 +138,9 @@ cat <<EOF
 2. The installer in $installer_dir. That directoy isn't needed
    anymore, thus you can delete it.
 
-3. In ./scripts there is tlmgr-install-extras.pl which installs
-   extra packages. If you have selected the full scheme, you do
-   not have to worry about this point.
+3. There is the script tlmgr-install-extras which installs extra
+   packages. If you have selected the full scheme, you do not have
+   to worry about this point.
 
 4. To uninstall TeX Live, use the script ~/.texlive-uninstaller
 
