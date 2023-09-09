@@ -151,39 +151,24 @@ $ tlmgr-search-install FILENAME
 
 ### TeX Live on the fly
 
-The methods above should not present unpleasant surprise, but the user has the right to not be bothered. There is a tool that while producing your document installs any missing package required during that process.
+I have written a small Python program that takes care to understand install the the packages required by a project but that are not present in your minimal TeX Live. This is small remedy, since it is to be used just once to get the package your TeX Live doen't have.
 
-Its name is *texliveonfly*, and we can get it from CTAN via *tlmgr*:
-
-```sh
-$ tlmgr install texliveonfly
-```
-
-The usage is quite simple:
+For instance, if you run
 
 ```sh
-$ texliveonfly -c TEXENGINE YOUR_TEX_FILE
+$ lualatex --synctex=1 main.tex
 ```
 
-Here `TEXENGINE` can be, for instance, `pdflatex`, `lualatex`, `xelatex` or others... You may drop the part `-c TEXENGINE` if you work with `pdflatex`.
-
-**(Warning)** You may have looked at `flytexonfly --help` and played with it. If so, it is worth to note that
+then just prepend `flytex` and move any option passed to you TeX engine at the end:
 
 ```sh
-$ texliveonfly -c TEXENGINE -a '--synctex=1' FILE.tex
+$ flytex lualatex main.tex --synctex=1
 ```
 
-(and who knows what else...) turns off the ability to install packages on the fly. By the way, who cares? Use *texliveonfly* just to get all what you need and got back to the genuines engines of TeX Live.
+To install *flytex*,
 
+```sh
+$ cp ./flytex ~/.local/bin/
+```
 
-### Criticisms
-
-Maybe you know or have tried [MiKTeX](https://miktex.org/). Its developers have been working hard to build an ecosystem where packages are downloaded the first time they are required. `texliveonfly.py` tries to emulate this feature and bring it to TeX Live.
-
-Truth be said, that script is a very old software, it was written in 2011 ([click!](https://latex.org/forum/viewtopic.php?f=12&t=15194)). You can find some repositories providing some changes and fixes (for example [this](https://github.com/maphy-psd/texliveonfly) of 2015), but it definitely seems a dead project, since it hasn't been receiving updates anymore from its authors.
-
-Another problem is that it was written on and for the Ubuntu of that era. If you read its source code, you will notice, some old software is invoked. Fortunately, this happens if you want to use `sudo` or similia. If we install all in your home, it seems there is no problem.
-
-Will *texliveonfly* return to life? I hope so, but who knows. If one wants to read its source code and work on it, one hurdle could be that the code is poorly commented. If one wants to write its own *TeX Live on the fly*, this means work from zero, although the idea behind is simple.
-
-You may find useful this project that used to be within this repository: in that case, [click](https://github.com/indrjo/flytex). Of course, it would be finer the TeX Live team provides the *official* installer on the fly.
+(Just make sure `~/.local/bin` is in `PATH`.)

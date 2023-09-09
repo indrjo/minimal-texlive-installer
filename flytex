@@ -19,7 +19,7 @@ def say_error(text, fatal=False):
     sys.exit()
 
 # The USAGE string. It will be used for a description of the program later.
-usage = f'USAGE: {__file__} engine file.tex [options]'
+usage = f'USAGE: flytex engine file.tex [options]'
 
 # We use regular expressions to hunt missing files down. Here is the pattern.
 missing_pattern = compile(r"! LaTeX Error: File `([^']+)' not found.")
@@ -121,7 +121,7 @@ if __name__ == '__main__':
   try:
     engine, file, *options = sys.argv[1:]
   except ValueError:
-    say_error(f'\n{usage}\n', True)
+    say_error(f'{usage}', True)
 
   try:
     flytex(engine, file, options)
