@@ -151,24 +151,25 @@ $ tlmgr-search-install FILENAME
 
 ### TeX Live on the fly
 
-I have written a small Python program that takes care to understand install the the packages required by a project but that are not present in your minimal TeX Live. This is small remedy, since it is to be used just once to get the package your TeX Live doen't have.
+I have written two small programs, one in *sh* and the other in *Python*, both for the same purpouse: understanding and  installing packages required by a project but that are not present in your *minimal* TeX Live. This is a small remedy for the first time when some packages are likely to be absent: once you have your packages, you can go back to how you are used to work.
 
 For instance, if you run
 
 ```sh
-$ lualatex --synctex=1 main.tex
+$ lualatex --synctex=1 --shell-escape main.tex
 ```
 
-then just prepend `flytex` and move any option passed to you TeX engine at the end:
+then just prepend `flytex` and move any option passed to the TeX engine, in this case `lualatex`, to the end:
 
 ```sh
-$ flytex lualatex main.tex --synctex=1
+$ flytex lualatex main.tex --synctex=1 --shell-escape
 ```
 
-To install *flytex*,
+To install *flytex* just copy the script `flytex.sh` or `flytex.py` to any location you want and make it executable: for example
 
 ```sh
-$ cp ./flytex ~/.local/bin/
+$ cp ./flytex.py ~/.local/bin/flytex
+$ chmod u+x ~/.local/bin/flytex
 ```
 
-(Just make sure `~/.local/bin` is in `PATH`.)
+(Just make sure `~/.local/bin` is present in `PATH`.)
