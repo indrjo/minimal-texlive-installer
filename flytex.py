@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from dataclasses import dataclass
-from re          import compile, match
+from re          import compile, search, IGNORECASE
 from subprocess  import run
 import sys
 
@@ -19,18 +19,18 @@ def say_error(text, fatal=False):
     sys.exit()
 
 # The USAGE string. It will be used for a description of the program later.
-usage = f'USAGE: flytex engine file.tex [options]'
+usage = 'USAGE: flytex engine file.tex [options]'
 
 # We use regular expressions to hunt missing files down. Here is the pattern.
-missing_pattern = compile(r"! LaTeX Error: File `([^']+)' not found.")
+missing_pattern = compile(r"file `([^']+)' not found", IGNORECASE)
 
 # This function take a string: if has the form of missing_pattern, then it will
 # extract a filename, otherwise a None is returned.
 def get_missing_fname(string):
   try:
-    return match(missing_pattern, string).group(1)
+    return search(missing_pattern, string).group(1)
   except AttributeError:
-    # !!! If there is no match, the function match returns a None.
+    # !!! If there is no match, search returns a None.
     return None
 
 # Provided a log file produced by some TeX engine, extract all the names of the
@@ -122,7 +122,6 @@ if __name__ == '__main__':
     engine, file, *options = sys.argv[1:]
   except ValueError:
     say_error(f'{usage}', True)
-
   try:
     flytex(engine, file, options)
   except Exception as some_exception:
