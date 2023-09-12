@@ -151,7 +151,11 @@ $ tlmgr-search-install FILENAME
 
 ### TeX Live on the fly
 
-I have written two small programs, one in *sh* and the other in *Python*, both for the same purpouse: understanding and  installing packages required by a project but that are not present in your *minimal* TeX Live. This is a small remedy for the first time when some packages are likely to be absent: once you have your packages, you can go back to how you are used to work.
+I have written some small scripts located in `./flytex` and both for the same purpouse: understanding and  installing packages required by a project but that are not present in your *minimal* TeX Live.
+
+Currently, the programs are written in different languages but do the same thing: hence choose that in the langauge you prefer. The programs of `./flytex` here have not an official name yet, and sometimes we will happen to refer to them all as *flytex*.
+
+It is just a tiny workaraound for the first time when some packages are likely to be absent: once you have your packages, you can go back to how you are used to work.
 
 For instance, if you run
 
@@ -168,7 +172,7 @@ $ flytex lualatex main.tex --synctex=1 --shell-escape
 To install *flytex* just copy the script `flytex.sh` or `flytex.py` to any location you want and make it executable: for example
 
 ```sh
-$ cp ./flytex.py ~/.local/bin/flytex
+$ cp ./flytex/flytex.py ~/.local/bin/flytex
 $ chmod u+x ~/.local/bin/flytex
 ```
 
