@@ -34,8 +34,7 @@ opts="$@"
 flog="${ftex%.tex}.log"
 
 _die () {
-  echo -e "\n(flytex-error) $1\n";
-  exit
+  echo -e "\n(flytex-error) $1\n"; exit
 }
 
 # Take a log file as argument and get all the names of the missing files.
