@@ -3,10 +3,10 @@
 #
 # DESCRIPTION
 #
-# This small script install TeX Live packages on the fly, that is:
+# This small script installs TeX Live packages on the fly, that is:
 #
-# 1. It attempts the processing of them main TeX file to create a document
-# 2. It inspects corresponding log file for missing files
+# 1. It attempts the processing of the main TeX file to create a document
+# 2. It inspects the corresponding log file for missing files.
 # 3. Interrogate CTAN to get the names of the packages owning them, and
 #    install them right away.
 #
@@ -16,11 +16,13 @@
 #
 #   $ lualatex --shell-escape --synctex=1 main.tex
 #
-# Then, if you want to use this script, you have to
+# to create your documents, then you have just to
 #
-#   $ flytex lualatex main.tex --shell-escape --synctex=1
+#   $ flytex lualatex main.tex
 #
-# That is: prepend flytex and move the options to the end.
+# That is: prepend flytex and forget the options. Indeed, this program is
+# rather a workaround: use it for the first when you suspect your TeX Live
+# might not have all the needed stuff and then return to your habits.
 #
 
 set -o pipefail
@@ -29,13 +31,11 @@ set -o pipefail
 # the options passed it and the main file to be processed.
 engine="$1"
 ftex="$2"
-shift;shift;
-opts="$@"
 
 # The log file is just the main file's name with ".log" in place of ".tex".
 flog="${ftex%.tex}.log"
 
-# Communicate the user with a small decoration, in order to  distinguish it
+# Communicate to user with a small decoration, in order to  distinguish it
 # from the output of the employed TeX engine. 
 _say () {
   echo -e "\n(flytex) $1\n"
@@ -47,18 +47,9 @@ _die () {
   exit 1
 }
 
-# Read the TeX log file and list all the missing files. More precisely, the
-# function looks for strings of the form
-#
-#  file `SOME_FILENAME' not found
-#
-# to extract SOME_FILENAME. One typical line where it occurs looks like:
-#
-#  ! LaTeX error: File `SOME_FILENAME' not found.
-#
-# We hope this pattern encompasses as many cases as possible.
+# Read a TeX log file and list all the missing files.
 _get_missing_fnames () {
-  perl -lne "/file \`([^']+)' not found/i && print \$1" "$1"
+  perl -lne "/['\`\"]([^'\`\"]+)['\`\"] not found/ && print \$1" "$1"
 }
 
 # Parse the output of
@@ -78,7 +69,7 @@ _get_package_names () {
 # !!! There is a limited tolerance though: the script can handle up to 50
 # !!! halts by itself. After this amount it is up to the user to hit Enter
 # !!! until TeX terminates. I am considering to use `timeout` here...
-perl -e 'print "\n"x50' | "$engine" "$opts" "$ftex"
+perl -e 'print "\n"x50' | max_print_line=1000 "$engine" "$ftex"
 
 # Time for the actual flytex...
 _say "interrogating CTAN and getting missing packages..."
