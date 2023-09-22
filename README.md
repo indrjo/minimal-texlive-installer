@@ -11,17 +11,17 @@
 
 ## Minimal TeX Live on GNU/Linux
 
-The procedure explained here installs TeX Live in your `$HOME`. Thus if you want TeX Live to be accessible to other users, this might not be the best choice for you.
+The procedure described here installs TeX Live into your `$HOME`. Thus if you want TeX Live to be accessible to other users, this might not be the best choice for you.
 
-Moreover, it is strongly recommended to read the section [Adding packages to your minimal TeX Live](#adding-packages-to-your-minimal-tex-live) and decide if it is worth.
+It is strongly recommended to read the section [Adding packages to your minimal TeX Live](#adding-packages-to-your-minimal-tex-live) and decide if it is worth.
 
 
 ### Installation
 
-The installation process is thoroughly handled by one of the scripts, `install-texlive`. Running it without any command line parameter is enough:
+The installation process is thoroughly handled by `install-texlive`. Running it without any parameter is enough:
 
 ```sh
-$ install-texlive
+$ ./install-texlive
 ```
 
 **(Note)** We list here the defaults and how to change them.
@@ -40,12 +40,12 @@ $ source ~/.bashrc
 
 or simply close and re-open your terminal.
 
-Another script, namely `tlmgr-install-extras`, installs extra packages. It is not run by the installer, so you it is up to you. There, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*.
+Another script, namely `tlmgr-install-extras`, installs extra packages. It is not run by the installer, so you it is up to you. There, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*. Read and edit it, as per your needs.
 
 
 ### Uninstall TeX Live
 
-The installation script generates an appropriate uninstaller, so use it if you want to (or must) get rid of TeX Live:
+The installation script generates an appropriate uninstaller, so use it if you want to (or have) get rid of TeX Live:
 
 ```sh
 $ ~/.texlive-uninstaller
@@ -89,7 +89,7 @@ For this, you need to install `apt` in your Termux (run `pkg install apt`).
 
 ## Adding packages to your minimal TeX Live
 
-As we have said, we have installed a *minimal* TeX Live, thus you are supposed to install even the most basic packages. Below are some recommendations.
+As we said, we have installed a *minimal* TeX Live: that is you are supposed to install even the most basic packages. Below there are some useful recommendations.
 
 
 ### Install manually
@@ -115,7 +115,7 @@ If the TeX engine complains it cannot find some file:
 then you can get the name of the package containing it with *tlmgr*:
 
 ```sh
-$ tlmgr search --global --file /FILENAME
+$ tlmgr search --global --file "/FILENAME"
 ```
 
 which will give you a list of packages containing it.
@@ -125,25 +125,21 @@ which will give you a list of packages containing it.
 It may be useful to create a function that searches packages for a given filename and installs them for you: open `~/.bashrc` and copy the following lines
 
 ```sh
-# This function accepts a filename, the one of the warning
-#
-#  ! LaTeX Error: File `FILENAME' not found.
-#
-# Interrogate CTAN for packages containing that file.
-tlmgr-search () {
-  tlmgr search --global --file "/$1" | grep -P ':$' | tr -d ':'
+# Interrogate CTAN for packages containing a given file.
+tlmgr_search () {
+  tlmgr search --global --file "/$1" | perl -lne "/([^:]+):$/ && print \$1"
 }
 
-# Install ALL the packages listed by `tlmgr-search-packages`.
-tlmgr-search-install () {
-  tlmgr-search "$1" | xargs tlmgr install
+# Install ALL the packages listed by `tlmgr_search`.
+tlmgr_search_install () {
+  tlmgr_search "$1" | xargs tlmgr install
 }
 ```
 
 This provides you two new functions you can use once you have sourced `~/.bashrc`, even though you will likely use only the latter:
 
 ```sh
-$ tlmgr-search-install FILENAME
+$ tlmgr_search_install FILENAME
 ```
 
 **(Attention)** It is not required `/` anymore.
@@ -151,11 +147,13 @@ $ tlmgr-search-install FILENAME
 
 ### TeX Live on the fly
 
-I have written some small scripts located in `./flytex` and both for the same purpouse: understanding and  installing packages required by a project but that are not present in your *minimal* TeX Live.
+The instructions of the previous section might not be practical if the list of the absent packages is long. Here are some tools that automate that boring task.
 
-Currently, the programs are written in different languages but do the same thing: hence choose that in the langauge you prefer. The programs of `./flytex` here have not an official name yet, and sometimes we will happen to refer to them all as *flytex*.
+In `./flytex` you can find some scripts, all doing the same thing: understanding and  installing packages required by a project but that are not present in your *minimal* TeX Live.
 
-It is just a tiny workaraound for the first time when some packages are likely to be absent: once you have your packages, you can go back to how you are used to work.
+The programs of `./flytex` have not an official name yet, and sometimes we will happen to refer to them all as *flytex*.
+
+These programs are rather workaraounds to enrich TeX Live as needed: as you have all the packages needed installed, you can return to how your usual workflow. Indeed, these programs should not be used more than they are supposed to.
 
 For instance, if you run
 
@@ -163,13 +161,13 @@ For instance, if you run
 $ lualatex --synctex=1 --shell-escape main.tex
 ```
 
-then just prepend `flytex` and move any option passed to the TeX engine, in this case `lualatex`, to the end:
+then just prepend `flytex` and forget the options:
 
 ```sh
-$ flytex lualatex main.tex --synctex=1 --shell-escape
+$ flytex lualatex main.tex
 ```
 
-To install *flytex* just copy the script `flytex.sh` or `flytex.py` to any location you want and make it executable: for example
+To install *flytex* just copy one of the scripts in `./flytex` to any location you want and make it executable: for example
 
 ```sh
 $ cp ./flytex/flytex.py ~/.local/bin/flytex
@@ -177,3 +175,5 @@ $ chmod u+x ~/.local/bin/flytex
 ```
 
 (Just make sure `~/.local/bin` is present in `PATH`.)
+
+**(Attention)** You may have to run *flytex* more than once, because dependencies may be quite intricate.
