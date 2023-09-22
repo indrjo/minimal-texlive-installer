@@ -1,30 +1,24 @@
 #!/usr/bin/env sh
 
-# This tiny script installs some basic packages after you have installed a
-# minimal TeX Live on your machine. Here, there is a short one-liner: the
-# list of packages starts directly below it and ends with EOF. Feel free to
-# edit this list as per your personal needs. Blank lines and lines starting
-# by "#" are neglected.
+# This script installs the TeX Live packages contained in a certain list.
 
-cat <<EOF | grep -P '^\s*[^#]' | tr -d ' ' | xargs tlmgr install
+# The list starts right after the line below and terminates with EOF.
+cat <<EOF | grep -vP '^\s*(#|$)' | xargs tlmgr install
 
-# The minimal installation has not the following packages shipped, although
-# they are essential: latex-bin provides binaries for pdflatex, lualatex,
-# xelatex and so on...; latex-base-dev is a collection of other useful code
-# for the LaTeX ecosystem; texdoc allows you to access documentation for
-# installed packages; texlive-scripts-extra is a collection of scripts for
-# the TeX Live environment. We recommend you to install at least them.
-
+# We strongly recommend to install the following essential packages.
 latex-bin
 latex-base-dev
 texdoc
 texlive-scripts-extra
+latexmk
 
 # Modify the list below, instead.
 
 # classes
 standalone
 suftesi
+beamer
+memoir
 
 # base packages
 fontspec
@@ -49,6 +43,7 @@ xifthen
 graphics
 
 # fonts
+fontsetup
 anyfontsize
 libertine
 sourcecodepro
@@ -68,4 +63,3 @@ tcolorbox
 thmtools
 
 EOF
-
