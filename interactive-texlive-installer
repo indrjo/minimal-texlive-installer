@@ -4,9 +4,10 @@ set -e -o pipefail
 
 # USAGE: get_answer text_prompt default
 get_answer () {
-  if [ -z "$2" ]
-    then defprompt=""
-    else defprompt="[default=$2] "
+  if [ -z "$2" ]; then
+    defprompt=""
+  else
+    defprompt="[default=$2] "
   fi
   read -p "> $1 $defprompt"
   ans=$(echo "$REPLY" | sed -E 's,^\s+,,' | sed -E 's,\s+$,,')
@@ -14,7 +15,7 @@ get_answer () {
 }
 
 expand_tilde () {
-  echo "$1" | sed -E "s,~,$HOME,"
+  echo "${1//'~'/$HOME}"
 }
 
 cat <<EOF
@@ -28,38 +29,38 @@ the cases.
 
 EOF
 
-read -p "If you want to continue hit Enter otherwise Ctrl-C" -n 1
+read -p "If you want to continue, hit Enter, otherwise Ctrl-C" -n 1
 
 # DETERMINE THE DETAILS FO THE INSTALLATION *******************************
 
-texdir=$(get_answer "where to install TeX Live?" "~/texlive")
-texdir=$(expand_tilde $texdir)
+texdir="$(get_answer "where to install TeX Live?" ~/texlive)"
+texdir="$(expand_tilde "$texdir")"
 
-if [ -d $texdir ]; then
+if [ -d "$texdir" ]; then
   echo "$texdir already exixts!"
   exit
 fi
 
-texuserdir=$HOME/.$(basename $texdir)
+texuserdir="$HOME/.$(basename $texdir)"
 
-if [ -d $texuserdir ]; then
+if [ -d "$texuserdir" ]; then
   echo "$texuserdir already exixts!"
   exit
 fi
 
-scheme=$(get_answer "select the scheme" "scheme-minimal")
+scheme="$(get_answer "select the scheme" scheme-minimal)"
 
-other_options=$(get_answer "any other option for install-tl?")
+other_options="$(get_answer "any other option for install-tl?")"
 
-tlrc=$(get_answer "where to write paths for TeX Live?" "~/.tlrc")
-tlrc=$(expand_tilde $tlrc)
+tlrc="$(get_answer "where to write paths for TeX Live?" ~/.tlrc)"
+tlrc="$(expand_tilde $tlrc)"
 
-if [ -f $tlrc ]; then
+if [ -f "$tlrc" ]; then
   echo "$tlrc already exixts!"
   exit
 fi
 
-installer_dir=$HOME/.texlive-installer
+installer_dir="$HOME/.texlive-installer"
 
 # GET READY FOR THE INSTALLATION ******************************************
 
@@ -67,8 +68,8 @@ installer_dir=$HOME/.texlive-installer
 # !!! This directory will eventually be deleted. This behaviour will likely
 # !!! change in future, for it is not unreasonable to keep the installer.
 
-[ -d $installer_dir ] || mkdir -p $installer_dir
-cd $installer_dir
+[ -d "$installer_dir" ] || mkdir -p "$installer_dir"
+cd "$installer_dir"
 
 wget --continue --no-clobber --no-verbose \
   "https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz"
@@ -77,17 +78,18 @@ tar -xzf install-tl-unx.tar.gz --strip-components 1
 
 # INSTALLATION ************************************************************
 
-# Start the installer with some changes and append certain directories of
-# TeX Live to some `PATH`s.
+# Start the installer with some changes and add some TeX Live directories
+# to `PATH`. Furthermore, craft a simple uninstaller for the installation
+# just performed. By the way, removing TeX Live by yourself should not be 
+# difficult, but pay attention to not remove the uninstaller.
 
-./install-tl --no-interaction         \
-             --scheme     $scheme     \
-             --texdir     $texdir     \
-             --texuserdir $texuserdir \
+./install-tl --no-interaction           \
+             --scheme     "$scheme"     \
+             --texdir     "$texdir"     \
+             --texuserdir "$texuserdir" \
              $other_options
 
-# Now write paths to $tlrc
-cat <<EOF > $tlrc
+cat <<EOF > "$tlrc"
 #!/bin/sh
 # TeX Live paths.
 export PATH=$texdir/bin/x86_64-linux:\$PATH
@@ -95,10 +97,6 @@ export MANPATH=$texdir/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=$texdir/texmf-dist/doc/info:\$INFOPATH
 EOF
 
-# After you have done all the work above, prepare the an uninstaller for 
-# the installed TeX Live. As you know, you have to annually get rid of TeX
-# Live in order to install the newer version. Removing TeX Live should not 
-# be difficult, but pay attention to not remove the uninstaller.
 cat <<EOF > ~/.texlive-uninstaller
 #!/bin/sh
 # The TeX Live uninstaller script
@@ -110,39 +108,24 @@ EOF
 
 chmod u+x ~/.texlive-uninstaller
 
-# REFINEMENTS *************************************************************
-
-# Install some highly recommended packages in case the user decides to not
-# install the full scheme. This step is quite important: so far, you have
-# only a bare skeleton, you cannot even do the most basic stuff.
-if [ $scheme != "scheme-full" ]; then
-  source $tlrc
-  tlmgr install latex-bin
-  tlmgr install latex-base-dev
-  tlmgr install texlive-scripts
-  tlmgr install texdoc
-fi
-
 # END *********************************************************************
 
 cat <<EOF
 
-!!! ABOUT YOUR INSTALLATION
+### ABOUT YOUR INSTALLATION ###
 
-1. Copy the line
+> Copy the line
 
-   [ -f $tlrc ] && source $tlrc
+  [ -f $tlrc ] && source $tlrc
 
-   at the bottom of your ~/.bashrc, if you haven't done so.
+  at the bottom of your ~/.bashrc, if you haven't done so yet.
 
-2. The installer in $installer_dir. That directoy isn't needed
-   anymore, thus you can delete it.
+> The dir $installer_dir isn't needed anymore: you can delete it.
 
-3. There is the script tlmgr-install-extras which installs extra
-   packages. If you have selected the full scheme, you do not have
-   to worry about this point.
+> To uninstall TeX Live, use the script ~/.texlive-uninstaller.
 
-4. To uninstall TeX Live, use the script ~/.texlive-uninstaller
+> If you have installed the minimal-scheme (the default scheme),
+  we recommend also to run the script ./tlmgr-install-extras to
+  get other basic packages. Read it and edit it.
 
 EOF
-
