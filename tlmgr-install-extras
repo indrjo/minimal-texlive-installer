@@ -8,6 +8,7 @@ cat <<EOF | grep -vP '^\s*(#|$)' | xargs tlmgr install
 # We strongly recommend to install the following essential packages.
 latex-bin
 latex-base-dev
+latex-tools-dev
 texdoc
 texlive-scripts-extra
 latexmk
