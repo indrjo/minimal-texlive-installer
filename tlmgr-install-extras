@@ -12,6 +12,8 @@ latex-tools-dev
 texdoc
 texlive-scripts-extra
 latexmk
+arara
+synctex
 
 # Modify the list below, instead.
 
