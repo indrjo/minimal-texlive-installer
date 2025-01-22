@@ -11,7 +11,7 @@
 
 ## Minimal TeX Live on GNU/Linux
 
-Before staring, some important remarks for you.
+Before starting, some important remarks for you.
 
 * The procedure described here installs TeX Live into your `$HOME`. TeX Live is often located in `/usr/local/bin/texlive` or something similar.
 
@@ -20,29 +20,15 @@ Before staring, some important remarks for you.
 
 ### Installation
 
-The installation process is thoroughly handled by `install-texlive`. Running it without any parameter is enough:
+The installation process is thoroughly handled by `texlive-installer`. Running it without parameters
 
 ``` sh
-$ ./install-texlive
+$ ./texlive-installer
 ```
 
-**(Note)** We list here the defaults and how to change them.
+and follow the instructions. Normally, the *minimal* installation takes a couple of minutes. When the installation process terminates, read what the script says: in fact, there might be some work left to you.
 
-* The directory where all of TeX Live is allocated is `~/texlive` by default. If you prefer another location, pass the option `--texdir HERE`.
-
-* You can select the scheme to install, by passing `--scheme SCHEME`. Here, `SCHEME` could be for example: `minimal` (the default), `basic`, `small`, `medium`, `full`, etc...
-
-* At the end of the installation an appropriate file that adds to your paths the ones of TeX Live is created. By default, the file is `~/.tlrc`, but you can choose any path you prefer, using `--tlrc HERE`.
-
-Normally, the *minimal* installation takes a couple of minutes. Afterwards
-
-``` sh
-$ source ~/.bashrc
-```
-
-**(Important)** When the installation process terminates, read what the script says: in fact, there might be some work left to you.
-
-**(Note)** Another script, namely `tlmgr-install-extras`, installs extra packages. It is not run by the installer, so you it is up to you. There, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*. Read and edit it as per your needs.
+Another script, namely `tlmgr-install-extras`, installs extra packages. It is not run by the installer, so you it is up to you. There, you will find a list of packages and some comments too; in particular, you will notice that some of them are *strongly recommended*. Read and edit it as per your needs.
 
 
 ### Uninstall TeX Live

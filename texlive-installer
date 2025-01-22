@@ -110,7 +110,7 @@ chmod u+x ~/.texlive-uninstaller
 
 # END *********************************************************************
 
-cat <<EOF
+cat <<EOF | tee ~/.texlive-post-install.txt
 
 ### ABOUT YOUR INSTALLATION ###
 
@@ -128,4 +128,8 @@ cat <<EOF
   we recommend also to run the script ./tlmgr-install-extras to
   get other basic packages. Read it and edit it.
 
+> This messages is contained in the file ~/.texlive-post-install.txt.
+  You can remove it.
+
 EOF
+
