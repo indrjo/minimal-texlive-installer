@@ -5,17 +5,19 @@
 # The list starts right after the line below and terminates with EOF.
 cat <<EOF | grep -vP '^\s*(#|$)' | xargs tlmgr install
 
-# We strongly recommend to install the following essential packages.
+## We strongly recommend to install the following essential packages.
+
 latex-bin
 latex-base-dev
 latex-tools-dev
 texdoc
 texlive-scripts-extra
+
+## Modify the list below, instead.
+
 latexmk
 arara
 synctex
-
-# Modify the list below, instead.
 
 # classes
 standalone
@@ -26,12 +28,17 @@ memoir
 # base packages
 fontspec
 polyglossia
-babel
 hyphen-english
 hyphen-german
 hyphen-french
 hyphen-italian
 hyphen-greek
+babel
+babel-english
+babel-german
+babel-french
+babel-italian
+babel-greek
 microtype
 csquotes
 hyperref
